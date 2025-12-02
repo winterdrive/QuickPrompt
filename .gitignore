@@ -7,3 +7,4 @@ node_modules/**
 *.vsix
 SEO.md
 dist/**
+tools/**

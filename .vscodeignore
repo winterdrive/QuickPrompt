@@ -2,6 +2,7 @@
 src/**
 tsconfig.json
 *.map
+tools/**
 
 # 開發設定
 .vscode/**
@@ -17,5 +18,31 @@ package-lock.json
 .DS_Store
 *.vsix
 
-# 文件
+# 開發文件（不需要打包到擴充功能）
+DEVELOPMENT.md
+I18N.md
 SEO.md
+ASSETS_COMPLETION.md
+PUBLISH_CHECKLIST.md
+assets/LOGO_OPTIONS.md
+assets/README.md
+
+# 多餘的圖片檔案（只保留必要的）
+assets/quickprompt_icon_source.svg
+assets/quickprompt_icon.svg
+assets/quickprompt_icon_256.png
+assets/quickprompt_icon_64.png
+
+# 保留以下檔案（會被打包）：
+# - README.md (英文版，Marketplace 主要顯示)
+# - README.zh-TW.md (繁中版)
+# - CHANGELOG.md (更新日誌)
+# - LICENSE (授權)
+# - package.json, package.nls*.json (i18n)
+# - dist/** (編譯後的程式碼)
+# - assets/quickprompt_icon_128.png (主 icon)
+# - assets/quickprompt_icon_gray.svg (Activity Bar icon)
+# - assets/hero_banner.png (README 展示)
+# - assets/feature_highlights.png (README 展示)
+# - assets/quick_search_demo.png (README 展示)
+# - assets/sidebar_view.png (README 展示)

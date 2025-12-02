@@ -2,13 +2,18 @@
     "name": "quick-prompt",
     "displayName": "%extension.displayName%",
     "description": "%extension.description%",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "publisher": "winterdrive",
+    "icon": "assets/quickprompt_icon_128.png",
     "license": "MIT",
     "repository": {
         "type": "git",
         "url": "https://github.com/winterdrive/QuickPrompt"
     },
+    "bugs": {
+        "url": "https://github.com/winterdrive/QuickPrompt/issues"
+    },
+    "homepage": "https://github.com/winterdrive/QuickPrompt#readme",
     "categories": [
         "Other",
         "Snippets"
@@ -42,7 +47,7 @@
                 {
                     "id": "promptSniperContainer",
                     "title": "%view.container.title%",
-                    "icon": "$(comment-discussion)"
+                    "icon": "assets/quickprompt_icon_gray.svg"
                 }
             ]
         },

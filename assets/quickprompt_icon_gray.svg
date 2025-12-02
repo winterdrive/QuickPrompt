@@ -1,0 +1,17 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Back Document (Maximized) -->
+  <!-- Starts at (2,2) to fill top-left -->
+  <path d="M16 5V2H2V16H5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Front Document (Maximized) -->
+  <!-- x=5, y=5, width=14, height=15 -->
+  <rect x="5" y="5" width="14" height="15" rx="2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Content Lines -->
+  <path d="M9 10H15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M9 14H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+  
+  <!-- Lightning Bolt (Super Sized & Bottom Right) -->
+  <!-- Large bolt overlaying the bottom right corner -->
+  <path d="M21 11L17 16.5H20L18.5 22.5L23.5 15H20.5L21.5 11H21Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+</svg>

@@ -2,6 +2,8 @@
 
 > **[繁體中文](README.zh-TW.md)** | English
 
+![Quick Prompt Hero Banner](assets/hero_banner.png)
+
 A lightweight VSCode extension for quick prompt management and usage
 
 ## ✨ Key Features
@@ -11,6 +13,18 @@ A lightweight VSCode extension for quick prompt management and usage
 - **🚀 Quick Add**: Select text and press `Alt+Shift+S` to instantly add, or use context menu
 - **🎨 Visual Interface**: Sidebar displays popularity with icons (🔥/⭐/📝)
 - **📁 Project Isolation**: Each workspace has its own independent prompt collection
+
+![Feature Highlights](assets/feature_highlights.png)
+
+## 📸 Screenshots
+
+### Quick Search in Action
+
+![Quick Search Demo](assets/quick_search_demo.png)
+
+### Sidebar Management
+
+![Sidebar View](assets/sidebar_view.png)
 
 ## 🚀 Quick Start
 

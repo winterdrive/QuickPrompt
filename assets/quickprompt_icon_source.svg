@@ -1,0 +1,55 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="256" height="256" rx="48" fill="#1E1E1E"/>
+  <defs>
+    <!-- Shadow definition -->
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+      <feOffset dx="2" dy="4" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.3"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <g transform="translate(48, 48)">
+    <!-- Back document with shadow -->
+    <rect x="35" y="35" width="110" height="130" rx="8" fill="#1E5A8E" filter="url(#shadow)"/>
+    
+    <!-- Middle document with shadow -->
+    <rect x="22" y="22" width="110" height="130" rx="8" fill="#2B7BB9" filter="url(#shadow)"/>
+    
+    <!-- Front document with shadow -->
+    <rect x="10" y="10" width="110" height="130" rx="8" fill="#007ACC" filter="url(#shadow)"/>
+    
+    <!-- Subtle gradient overlay on front document -->
+    <defs>
+      <linearGradient id="docGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" style="stop-color:#0098FF;stop-opacity:0.3" />
+        <stop offset="100%" style="stop-color:#007ACC;stop-opacity:0" />
+      </linearGradient>
+    </defs>
+    <rect x="10" y="10" width="110" height="130" rx="8" fill="url(#docGradient)"/>
+    
+    <!-- Document lines on front with better spacing -->
+    <line x1="25" y1="32" x2="95" y2="32" stroke="#E3F2FD" stroke-width="3.5" stroke-linecap="round" opacity="0.9"/>
+    <line x1="25" y1="48" x2="85" y2="48" stroke="#E3F2FD" stroke-width="3.5" stroke-linecap="round" opacity="0.9"/>
+    <line x1="25" y1="64" x2="90" y2="64" stroke="#E3F2FD" stroke-width="3.5" stroke-linecap="round" opacity="0.9"/>
+    <line x1="25" y1="80" x2="78" y2="80" stroke="#E3F2FD" stroke-width="3.5" stroke-linecap="round" opacity="0.9"/>
+    <line x1="25" y1="96" x2="88" y2="96" stroke="#C5E1F5" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+    
+    <!-- Enhanced lightning bolt with glow -->
+    <defs>
+      <filter id="glow">
+        <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+        <feMerge>
+          <feMergeNode in="coloredBlur"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+    </defs>
+    <path d="M112 55L97 100H112L105 145L145 85H130L135 55Z" fill="#FFD700" stroke="#FFA500" stroke-width="3.5" stroke-linejoin="round" filter="url(#glow)"/>
+  </g>
+</svg>
