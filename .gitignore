@@ -1,0 +1,9 @@
+*.map
+.vscode/**
+.idea/**
+.git/**
+node_modules/**
+.DS_Store
+*.vsix
+SEO.md
+dist/**

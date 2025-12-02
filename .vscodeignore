@@ -1,0 +1,21 @@
+# 原始碼（只打包編譯後的 dist/）
+src/**
+tsconfig.json
+*.map
+
+# 開發設定
+.vscode/**
+.idea/**
+.gitignore
+.git/**
+
+# 依賴
+node_modules/**
+package-lock.json
+
+# 其他
+.DS_Store
+*.vsix
+
+# 文件
+SEO.md

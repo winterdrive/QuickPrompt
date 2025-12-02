@@ -1,0 +1,164 @@
+{
+    "name": "quick-prompt",
+    "displayName": "%extension.displayName%",
+    "description": "%extension.description%",
+    "version": "0.0.1",
+    "publisher": "winterdrive",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/winterdrive/QuickPrompt"
+    },
+    "categories": [
+        "Other",
+        "Snippets"
+    ],
+    "keywords": [
+        "prompt",
+        "ai",
+        "copilot",
+        "chatgpt",
+        "claude",
+        "gemini",
+        "prompt management",
+        "prompt library",
+        "prompt snippet",
+        "ai assistant",
+        "llm",
+        "productivity",
+        "code assistant",
+        "developer tools"
+    ],
+    "engines": {
+        "vscode": "^1.75.0"
+    },
+    "main": "./dist/extension.js",
+    "activationEvents": [
+        "onStartupFinished"
+    ],
+    "contributes": {
+        "viewsContainers": {
+            "activitybar": [
+                {
+                    "id": "promptSniperContainer",
+                    "title": "%view.container.title%",
+                    "icon": "$(comment-discussion)"
+                }
+            ]
+        },
+        "views": {
+            "promptSniperContainer": [
+                {
+                    "id": "promptSniperView",
+                    "name": "%view.prompts.name%",
+                    "icon": "$(list-unordered)"
+                }
+            ]
+        },
+        "commands": [
+            {
+                "command": "promptSniper.search",
+                "title": "%command.search.title%",
+                "icon": "$(search)"
+            },
+            {
+                "command": "promptSniper.insert",
+                "title": "%command.insert.title%",
+                "icon": "$(copy)"
+            },
+            {
+                "command": "promptSniper.addPrompt",
+                "title": "%command.addPrompt.title%",
+                "icon": "$(add)"
+            },
+            {
+                "command": "promptSniper.silentAdd",
+                "title": "%command.silentAdd.title%",
+                "icon": "$(zap)"
+            },
+            {
+                "command": "promptSniper.deletePrompt",
+                "title": "%command.deletePrompt.title%",
+                "icon": "$(trash)"
+            },
+            {
+                "command": "promptSniper.togglePin",
+                "title": "%command.togglePin.title%",
+                "icon": "$(pin)"
+            },
+            {
+                "command": "promptSniper.refresh",
+                "title": "%command.refresh.title%",
+                "icon": "$(refresh)"
+            },
+            {
+                "command": "promptSniper.editPrompt",
+                "title": "%command.editPrompt.title%",
+                "icon": "$(edit)"
+            }
+        ],
+        "keybindings": [
+            {
+                "command": "promptSniper.search",
+                "key": "alt+p",
+                "mac": "opt+p"
+            },
+            {
+                "command": "promptSniper.silentAdd",
+                "key": "alt+shift+s",
+                "mac": "opt+shift+s"
+            }
+        ],
+        "menus": {
+            "view/title": [
+                {
+                    "command": "promptSniper.addPrompt",
+                    "when": "view == promptSniperView",
+                    "group": "navigation@1"
+                },
+                {
+                    "command": "promptSniper.refresh",
+                    "when": "view == promptSniperView",
+                    "group": "navigation@2"
+                }
+            ],
+            "view/item/context": [
+                {
+                    "command": "promptSniper.insert",
+                    "when": "view == promptSniperView",
+                    "group": "inline"
+                },
+                {
+                    "command": "promptSniper.togglePin",
+                    "when": "view == promptSniperView",
+                    "group": "inline"
+                },
+                {
+                    "command": "promptSniper.editPrompt",
+                    "when": "view == promptSniperView",
+                    "group": "inline"
+                },
+                {
+                    "command": "promptSniper.deletePrompt",
+                    "when": "view == promptSniperView",
+                    "group": "navigation@2"
+                }
+            ],
+            "editor/context": [
+                {
+                    "command": "promptSniper.silentAdd",
+                    "when": "editorHasSelection",
+                    "group": "9_cutcopypaste"
+                }
+            ]
+        }
+    },
+    "scripts": {
+        "vscode:prepublish": "tsc -p ./"
+    },
+    "devDependencies": {
+        "@types/node": "^16.x",
+        "@types/vscode": "^1.75.0",
+        "typescript": "^4.9.5"
+    }
+}

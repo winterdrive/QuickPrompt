@@ -1,0 +1,56 @@
+# Quick Prompt
+
+> Quick Prompt is a VS Code extension for managing and reusing prompts for AI assistants (ChatGPT, Copilot, Claude, Gemini). It provides quick copy, smart tracking, and workspace isolation features to help developers organize their AI prompts efficiently.
+
+## Core Functionality & Source Code
+
+- `/src/extension.ts` - Main extension activation, command registration, and i18n initialization.
+- `/src/promptProvider.ts` - Implements the TreeDataProvider for the Quick Prompt view and manages prompt data.
+- `/src/promptFileSystem.ts` - Virtual file system provider for editing prompts in native VSCode editor.
+- `/src/i18n.ts` - Internationalization utility for multi-language support (English, Traditional Chinese, Simplified Chinese).
+
+## Key Documentation & Guides
+
+- `/README.md` - User-facing documentation: features, quick start, usage guide, and best practices.
+- `/DEVELOPMENT.md` - Developer guide: environment setup, architecture, i18n guide, and troubleshooting.
+
+## Configuration & Manifest
+
+- `/package.json` - Extension manifest: defines contributions, activation events, commands, and menus.
+- `/package.nls.json` - Default localization strings (English) for package.json.
+- `/package.nls.zh-tw.json` - Traditional Chinese localization for package.json.
+- `/package.nls.zh-cn.json` - Simplified Chinese localization for package.json.
+- `/tsconfig.json` - TypeScript compiler configuration.
+
+## Internationalization Files
+
+- `/i18n/en.json` - English runtime messages.
+- `/i18n/zh-tw.json` - Traditional Chinese runtime messages.
+- `/i18n/zh-cn.json` - Simplified Chinese runtime messages.
+
+## Data Storage
+
+- `.vscode/prompts.json` - Workspace-specific prompt storage (JSON format).
+- Each prompt contains: id, title, content, use_count, last_used, created_at, pinned.
+
+## Key Features
+
+1. **Quick Copy**: Press `Alt+P` to search and copy prompts to clipboard.
+2. **Smart Tracking**: Automatically tracks usage count and last used date.
+3. **Quick Add**: Select text and press `Alt+Shift+S` to add as a new prompt.
+4. **Visual Indicators**: Icons show prompt popularity (🔥 hot, ⭐ frequent, 📝 used, ⚪ unused).
+5. **Workspace Isolation**: Each workspace has its own prompt collection.
+6. **Pin Prompts**: Pin important prompts to keep them at the top.
+7. **Native Editing**: Edit prompts using VSCode's native editor via virtual file system.
+8. **Multi-language**: Supports English, Traditional Chinese, and Simplified Chinese.
+
+## Usage & Examples
+
+- Review the "Quick Start" and "Basic Operations" sections in `/README.md`.
+- The extension uses a TreeView in the Activity Bar for browsing prompts.
+- Prompts are stored in `.vscode/prompts.json` for workspace-specific management.
+
+## Contribution & Development
+
+- `/DEVELOPMENT.md` - Primary guide for setting up the development environment and contributing.
+- `/LICENSE` - MIT License.
