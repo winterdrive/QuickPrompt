@@ -2,7 +2,7 @@
     "name": "quick-prompt",
     "displayName": "%extension.displayName%",
     "description": "%extension.description%",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "publisher": "winterdrive",
     "icon": "assets/quickprompt_icon_128.png",
     "license": "MIT",
@@ -32,7 +32,8 @@
         "llm",
         "productivity",
         "code assistant",
-        "developer tools"
+        "developer tools",
+        "clipboard history"
     ],
     "engines": {
         "vscode": "^1.75.0"
@@ -42,6 +43,42 @@
         "onStartupFinished"
     ],
     "contributes": {
+        "configuration": {
+            "title": "Quick Prompt",
+            "properties": {
+                "quickPrompt.clipboardHistory.enabled": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable automatic clipboard history tracking"
+                },
+                "quickPrompt.clipboardHistory.maxItems": {
+                    "type": "number",
+                    "default": 20,
+                    "minimum": 5,
+                    "maximum": 100,
+                    "description": "Maximum number of clipboard history items to keep"
+                },
+                "quickPrompt.clipboardHistory.enablePolling": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable lightweight polling (only when VSCode is active)"
+                },
+                "quickPrompt.clipboardHistory.pollingInterval": {
+                    "type": "number",
+                    "default": 5000,
+                    "minimum": 2000,
+                    "maximum": 30000,
+                    "description": "Polling interval in milliseconds (5000-10000 recommended)"
+                },
+                "quickPrompt.clipboardHistory.minLength": {
+                    "type": "number",
+                    "default": 10,
+                    "minimum": 1,
+                    "maximum": 100,
+                    "description": "Minimum content length (characters) to record"
+                }
+            }
+        },
         "viewsContainers": {
             "activitybar": [
                 {
@@ -100,6 +137,41 @@
                 "command": "promptSniper.editPrompt",
                 "title": "%command.editPrompt.title%",
                 "icon": "$(edit)"
+            },
+            {
+                "command": "promptSniper.copyClipboardItem",
+                "title": "%command.copyClipboardItem.title%",
+                "icon": "$(copy)"
+            },
+            {
+                "command": "promptSniper.pinClipboardItem",
+                "title": "%command.pinClipboardItem.title%",
+                "icon": "$(pin)"
+            },
+            {
+                "command": "promptSniper.editClipboardItem",
+                "title": "%command.editClipboardItem.title%",
+                "icon": "$(edit)"
+            },
+            {
+                "command": "promptSniper.removeClipboardItem",
+                "title": "%command.removeClipboardItem.title%",
+                "icon": "$(trash)"
+            },
+            {
+                "command": "promptSniper.clearClipboardHistory",
+                "title": "%command.clearClipboardHistory.title%",
+                "icon": "$(clear-all)"
+            },
+            {
+                "command": "promptSniper.moveUp",
+                "title": "%command.moveUp.title%",
+                "icon": "$(arrow-up)"
+            },
+            {
+                "command": "promptSniper.moveDown",
+                "title": "%command.moveDown.title%",
+                "icon": "$(arrow-down)"
             }
         ],
         "keybindings": [
@@ -125,28 +197,63 @@
                     "command": "promptSniper.refresh",
                     "when": "view == promptSniperView",
                     "group": "navigation@2"
+                },
+                {
+                    "command": "promptSniper.clearClipboardHistory",
+                    "when": "view == promptSniperView",
+                    "group": "navigation@3"
                 }
             ],
             "view/item/context": [
                 {
                     "command": "promptSniper.insert",
-                    "when": "view == promptSniperView",
-                    "group": "inline"
+                    "when": "view == promptSniperView && viewItem == promptItem",
+                    "group": "inline@1"
                 },
                 {
                     "command": "promptSniper.togglePin",
-                    "when": "view == promptSniperView",
-                    "group": "inline"
+                    "when": "view == promptSniperView && viewItem == promptItem",
+                    "group": "inline@2"
                 },
                 {
                     "command": "promptSniper.editPrompt",
-                    "when": "view == promptSniperView",
-                    "group": "inline"
+                    "when": "view == promptSniperView && viewItem == promptItem",
+                    "group": "inline@3"
                 },
                 {
                     "command": "promptSniper.deletePrompt",
-                    "when": "view == promptSniperView",
+                    "when": "view == promptSniperView && viewItem == promptItem",
+                    "group": "inline@4"
+                },
+                {
+                    "command": "promptSniper.moveUp",
+                    "when": "view == promptSniperView && viewItem == promptItem",
+                    "group": "navigation@1"
+                },
+                {
+                    "command": "promptSniper.moveDown",
+                    "when": "view == promptSniperView && viewItem == promptItem",
                     "group": "navigation@2"
+                },
+                {
+                    "command": "promptSniper.copyClipboardItem",
+                    "when": "view == promptSniperView && viewItem == clipboardItem",
+                    "group": "inline@1"
+                },
+                {
+                    "command": "promptSniper.pinClipboardItem",
+                    "when": "view == promptSniperView && viewItem == clipboardItem",
+                    "group": "inline@2"
+                },
+                {
+                    "command": "promptSniper.editClipboardItem",
+                    "when": "view == promptSniperView && viewItem == clipboardItem",
+                    "group": "inline@3"
+                },
+                {
+                    "command": "promptSniper.removeClipboardItem",
+                    "when": "view == promptSniperView && viewItem == clipboardItem",
+                    "group": "inline@4"
                 }
             ],
             "editor/context": [

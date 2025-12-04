@@ -24,5 +24,18 @@
     "time.today": "今天",
     "time.yesterday": "昨天",
     "time.daysAgo": "{0}天前",
-    "time.never": "未使用"
+    "time.never": "未使用",
+    "time.justNow": "剛剛",
+    "time.minutesAgo": "{0}分鐘前",
+    "time.hoursAgo": "{0}小時前",
+    "group.clipboardHistory": "📋 剪貼簿歷史",
+    "group.myPrompts": "📌 我的 Prompts",
+    "clipboard.source.vscode": "VSCode 內部",
+    "clipboard.source.external": "外部應用",
+    "clipboard.chars": "{0} 字元",
+    "message.clipboardItemPinned": "✅ 已固定到 Prompts：{0}",
+    "message.clipboardHistoryCleared": "🗑️ 已清空剪貼簿歷史",
+    "message.clipboardItemRemoved": "🗑️ 已從歷史移除",
+    "input.pinPromptTitle": "為此 Prompt 設定標題",
+    "confirm.clearClipboardHistory": "確定要清空所有剪貼簿歷史嗎？"
 }

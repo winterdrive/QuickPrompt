@@ -26,6 +26,7 @@ ASSETS_COMPLETION.md
 PUBLISH_CHECKLIST.md
 assets/LOGO_OPTIONS.md
 assets/README.md
+docs/**
 
 # 多餘的圖片檔案（只保留必要的）
 assets/quickprompt_icon_source.svg

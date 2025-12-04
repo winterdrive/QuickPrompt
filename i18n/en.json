@@ -24,5 +24,18 @@
     "time.today": "Today",
     "time.yesterday": "Yesterday",
     "time.daysAgo": "{0} days ago",
-    "time.never": "Never used"
+    "time.never": "Never used",
+    "time.justNow": "Just now",
+    "time.minutesAgo": "{0} min ago",
+    "time.hoursAgo": "{0} hr ago",
+    "group.clipboardHistory": "📋 Clipboard History",
+    "group.myPrompts": "📌 My Prompts",
+    "clipboard.source.vscode": "VSCode Internal",
+    "clipboard.source.external": "External",
+    "clipboard.chars": "{0} chars",
+    "message.clipboardItemPinned": "✅ Pinned to Prompts: {0}",
+    "message.clipboardHistoryCleared": "🗑️ Clipboard history cleared",
+    "message.clipboardItemRemoved": "🗑️ Removed from history",
+    "input.pinPromptTitle": "Enter title for this Prompt",
+    "confirm.clearClipboardHistory": "Clear all clipboard history?"
 }

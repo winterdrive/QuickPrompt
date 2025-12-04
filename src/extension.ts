@@ -1,19 +1,65 @@
 import * as vscode from 'vscode';
-import * as fs from 'fs';
-import * as path from 'path';
-import { PromptProvider, PromptItem } from './promptProvider';
+import { PromptProvider } from './promptProvider';
 import { PromptFileSystemProvider } from './promptFileSystem';
+import { ClipboardManager } from './clipboardManager';
+import { PromptHoverProvider } from './promptHoverProvider';
 import { I18n } from './i18n';
+import { registerPromptCommands, registerClipboardCommands } from './commands';
 
 export async function activate(context: vscode.ExtensionContext) {
     // Initialize i18n
     await I18n.initialize(context);
 
+    // Initialize providers
+    const { promptProvider, clipboardManager } = initializeProviders(context);
+
+    // Initialize file system
+    const fileSystemProvider = initializeFileSystem(context, promptProvider);
+
+    // Initialize hover provider
+    initializeHoverProvider(context, promptProvider, clipboardManager);
+
+    // Initialize status bar
+    initializeStatusBar(context, clipboardManager);
+
+    // Register all commands
+    registerPromptCommands(context, promptProvider, clipboardManager, fileSystemProvider);
+    registerClipboardCommands(context, promptProvider, clipboardManager, fileSystemProvider);
+
+    // Setup cleanup
+    setupCleanup(context, clipboardManager);
+}
+
+export function deactivate() { }
+
+// ==================== Initialization Functions ====================
+
+/**
+ * Initialize core providers (PromptProvider and ClipboardManager)
+ */
+function initializeProviders(context: vscode.ExtensionContext) {
     const promptProvider = new PromptProvider(context);
     vscode.window.registerTreeDataProvider('promptSniperView', promptProvider);
 
-    // 註冊虛擬檔案系統
+    // 初始化 ClipboardManager
+    const clipboardManager = new ClipboardManager(context);
+    promptProvider.setClipboardManager(clipboardManager);
+
+    // 註冊即時捕捉（監聽選取變化）
+    clipboardManager.registerInstantCapture(context.subscriptions);
+
+    return { promptProvider, clipboardManager };
+}
+
+/**
+ * Initialize virtual file system provider
+ */
+function initializeFileSystem(
+    context: vscode.ExtensionContext,
+    promptProvider: PromptProvider
+): PromptFileSystemProvider {
     const fileSystemProvider = new PromptFileSystemProvider();
+
     context.subscriptions.push(
         vscode.workspace.registerFileSystemProvider('prompt-sniper', fileSystemProvider, {
             isCaseSensitive: true,
@@ -32,147 +78,88 @@ export async function activate(context: vscode.ExtensionContext) {
         fileSystemProvider.rebuildCache();
     });
 
-    // 搜尋 Prompt
-    context.subscriptions.push(
-        vscode.commands.registerCommand('promptSniper.search', async () => {
-            let prompts = promptProvider.getPrompts();
-
-            // 排序：Pinned 優先
-            prompts.sort((a, b) => {
-                if (a.pinned && !b.pinned) return -1;
-                if (!a.pinned && b.pinned) return 1;
-                return 0;
-            });
-
-            const items = prompts.map(p => ({
-                label: `${p.pinned ? I18n.getMessage('icon.pinned') : ''}${p.use_count >= 10 ? I18n.getMessage('icon.hot') : p.use_count >= 5 ? I18n.getMessage('icon.star') : p.use_count > 0 ? I18n.getMessage('icon.used') : I18n.getMessage('icon.unused')} ${p.title}`,
-                detail: p.content,
-                description: I18n.getMessage('status.useCount', p.use_count.toString()),
-                prompt: p
-            }));
-
-            const result = await vscode.window.showQuickPick(items, {
-                placeHolder: I18n.getMessage('message.searchPlaceholder'),
-                matchOnDetail: true,
-                matchOnDescription: true
-            });
-
-            if (result) {
-                await vscode.env.clipboard.writeText(result.prompt.content);
-                promptProvider.incrementUseCount(result.prompt.id);
-                vscode.window.showInformationMessage(I18n.getMessage('message.copied', result.prompt.title));
-            }
-        })
-    );
-
-    // 複製 Prompt
-    context.subscriptions.push(
-        vscode.commands.registerCommand('promptSniper.insert', async (item: PromptItem) => {
-            await vscode.env.clipboard.writeText(item.prompt.content);
-            promptProvider.incrementUseCount(item.prompt.id);
-            vscode.window.showInformationMessage(I18n.getMessage('message.copied', item.prompt.title));
-        })
-    );
-
-    // 新增 Prompt - 智慧模式（支援 "標題::內容" 語法）
-    context.subscriptions.push(
-        vscode.commands.registerCommand('promptSniper.addPrompt', async () => {
-            const input = await vscode.window.showInputBox({
-                prompt: I18n.getMessage('input.addPromptPrompt'),
-                placeHolder: I18n.getMessage('input.addPromptPlaceholder'),
-                validateInput: (value) => {
-                    if (!value || value.trim().length === 0) {
-                        return I18n.getMessage('input.contentRequired');
-                    }
-                    return null;
-                }
-            });
-
-            if (!input) {
-                return;
-            }
-
-            // 智慧解析：支援 "標題::內容" 格式
-            let title: string, content: string;
-            if (input.includes('::')) {
-                const parts = input.split('::', 2);
-                title = parts[0].trim();
-                content = parts[1].trim();
-
-                // 如果標題為空，使用自動生成
-                if (!title) {
-                    title = content.split('\n')[0].substring(0, 30).trim();
-                }
-            } else {
-                content = input;
-                // 自動生成標題（取前 30 字或第一行）
-                title = input.split('\n')[0].substring(0, 30).trim();
-            }
-
-            await promptProvider.addPrompt(title, content);
-        })
-    );
-
-    // 新增 Prompt - Silent Capture (無干擾捕捉)
-    context.subscriptions.push(
-        vscode.commands.registerCommand('promptSniper.silentAdd', async () => {
-            const editor = vscode.window.activeTextEditor;
-            if (!editor) {
-                vscode.window.showWarningMessage(I18n.getMessage('message.pleaseSelectText'));
-                return;
-            }
-
-            const selection = editor.document.getText(editor.selection);
-            if (!selection || selection.trim().length === 0) {
-                vscode.window.showWarningMessage(I18n.getMessage('message.pleaseSelectText'));
-                return;
-            }
-
-            // 自動生成標題 (取前 30 字，去除換行)
-            const autoTitle = selection.replace(/[\r\n]+/g, ' ').substring(0, 30).trim();
-
-            // 直接儲存，並顯示通知 (silent=false)
-            await promptProvider.addPromptWithOption(autoTitle, selection, false);
-        })
-    );
-
-    // 刪除 Prompt
-    context.subscriptions.push(
-        vscode.commands.registerCommand('promptSniper.deletePrompt', async (item: PromptItem) => {
-            await promptProvider.deletePrompt(item);
-        })
-    );
-
-    // 釘選/取消釘選 Prompt
-    context.subscriptions.push(
-        vscode.commands.registerCommand('promptSniper.togglePin', async (item: PromptItem) => {
-            promptProvider.togglePin(item);
-        })
-    );
-
-    // 重新整理
-    context.subscriptions.push(
-        vscode.commands.registerCommand('promptSniper.refresh', () => {
-            promptProvider.refresh();
-            vscode.window.showInformationMessage(I18n.getMessage('message.refreshed'));
-        })
-    );
-
-    // 編輯 Prompt (使用虛擬檔案系統)
-    context.subscriptions.push(
-        vscode.commands.registerCommand('promptSniper.editPrompt', async (item: PromptItem) => {
-            if (!item || !item.prompt) return;
-
-            // 使用虛擬檔案系統開啟 Prompt
-            const uri = fileSystemProvider.getUriForPrompt(item.prompt.id);
-            const doc = await vscode.workspace.openTextDocument(uri);
-            await vscode.window.showTextDocument(doc, {
-                preview: false, // 不使用預覽模式，確保分頁不會被自動關閉
-                preserveFocus: false
-            });
-        })
-    );
-
+    return fileSystemProvider;
 }
 
-export function deactivate() { }
+/**
+ * Initialize hover provider for virtual files
+ */
+function initializeHoverProvider(
+    context: vscode.ExtensionContext,
+    promptProvider: PromptProvider,
+    clipboardManager: ClipboardManager
+): void {
+    const hoverProvider = new PromptHoverProvider();
+
+    context.subscriptions.push(
+        vscode.languages.registerHoverProvider(
+            { scheme: 'prompt-sniper', language: 'markdown' },
+            hoverProvider
+        )
+    );
+
+    // 初始化 HoverProvider 資料
+    hoverProvider.updatePrompts(promptProvider.getPrompts());
+    hoverProvider.updateClipboardHistory(clipboardManager.getHistory());
+
+    // 當 Prompts 或剪貼簿歷史更新時，同步到 HoverProvider
+    promptProvider.onPromptsChanged(() => {
+        hoverProvider.updatePrompts(promptProvider.getPrompts());
+    });
+
+    clipboardManager.onHistoryChanged(() => {
+        hoverProvider.updateClipboardHistory(clipboardManager.getHistory());
+    });
+}
+
+/**
+ * Initialize status bar item for clipboard
+ */
+function initializeStatusBar(
+    context: vscode.ExtensionContext,
+    clipboardManager: ClipboardManager
+): void {
+    const clipboardStatusBar = vscode.window.createStatusBarItem(
+        vscode.StatusBarAlignment.Right,
+        100
+    );
+    clipboardStatusBar.command = 'promptSniper.search'; // 點擊狀態列開啟搜尋
+    clipboardStatusBar.text = '$(clippy)'; // 使用剪貼簿圖示
+    context.subscriptions.push(clipboardStatusBar);
+
+    // 更新狀態列顯示
+    const updateStatusBar = () => {
+        const history = clipboardManager.getHistory();
+        if (history.length > 0) {
+            const latest = history[0];
+            // 僅顯示圖示，tooltip 顯示完整預覽
+            clipboardStatusBar.text = '$(clippy)';
+            clipboardStatusBar.tooltip = `📋 最新剪貼簿: ${latest.preview}\n點擊開啟 Quick Prompt 搜尋`;
+            clipboardStatusBar.show();
+        } else {
+            clipboardStatusBar.hide();
+        }
+    };
+
+    // 初始更新
+    updateStatusBar();
+
+    // 監聽剪貼簿歷史變化
+    clipboardManager.onHistoryChanged(() => {
+        updateStatusBar();
+    });
+}
+
+/**
+ * Setup cleanup handlers
+ */
+function setupCleanup(
+    context: vscode.ExtensionContext,
+    clipboardManager: ClipboardManager
+): void {
+    context.subscriptions.push({
+        dispose: () => {
+            clipboardManager.dispose();
+        }
+    });
+}

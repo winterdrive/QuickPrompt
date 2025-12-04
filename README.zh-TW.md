@@ -1,20 +1,34 @@
 # Quick Prompt 🎯
 
-![Quick Prompt Hero Banner](assets/hero_banner.png)
+![Quick Prompt Hero Banner](assets/hero_banner_v003.png)
 
 快速管理和使用 Prompt 的 VSCode 擴充功能
 
 ## ✨ 核心特色
 
 - **🎯 極速複製**：按 `Alt+P` 搜尋 Prompt，按 Enter 直接複製到剪貼簿
+- **📋 自動剪貼簿歷史**：自動追蹤您的剪貼簿 - 再也不會遺失好用的 Prompt
 - **📊 智慧追蹤**：自動記錄使用次數和最後使用時間，找出您的黃金 Prompt
 - **🚀 快速新增**：選取文字按 `Alt+Shift+S` 立即新增，或透過右鍵選單
 - **🎨 視覺化介面**：側邊欄以圖示標示熱門程度（🔥/⭐/📝）
 - **📁 專案隔離**：每個工作區有獨立的 Prompt 集合
+- **⬆️⬇️ 手動排序**：右鍵點擊可上下移動 Prompt
+- **✏️ 原生編輯**：像編輯一般檔案一樣編輯 Prompt，完整支援 VSCode 功能
 
-![功能亮點](assets/feature_highlights.png)
+![功能亮點](assets/feature_highlights_v0003.png)
 
-## 📸 功能截圖
+<details>
+<summary>📖 查看舊版本（基礎介面參考）</summary>
+
+### 功能亮點（舊版本）
+
+![功能亮點 - 舊版本](assets/feature_highlights.png)
+
+*這些圖片展示了目前版本仍保留的基礎介面和核心功能。*
+
+</details>
+
+## 📸 功能截圖 (AI 生成)
 
 ### 快速搜尋功能
 
@@ -56,7 +70,7 @@
 ### 方法 1：從選取文字新增（最快）🚀
 
 1. 在編輯器中選取一段文字（您的 Prompt）
-2. 按 `Alt+Shift+S`（或右鍵選擇「Quick Add Prompt (Selection)」）
+2. 右鍵選擇「Quick Add Prompt (Selection)」（或按 `Alt+Shift+S`）
 3. 完成！自動生成標題並儲存
 
 ### 方法 2：智慧新增模式 ⚡

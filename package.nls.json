@@ -1,6 +1,6 @@
 {
     "extension.displayName": "Quick Prompt",
-    "extension.description": "Organize, search, and reuse your prompts for ChatGPT, Copilot, Claude. Quick copy, smart tracking, workspace isolation.",
+    "extension.description": "Organize, search, and reuse your prompts for ChatGPT, Copilot, Claude. Quick copy, smart tracking, workspace isolation, clipboard history.",
     "view.container.title": "Quick Prompt",
     "view.prompts.name": "Prompts",
     "command.search.title": "Search Prompts",
@@ -10,5 +10,12 @@
     "command.deletePrompt.title": "Delete Prompt",
     "command.togglePin.title": "Pin/Unpin Prompt",
     "command.refresh.title": "Refresh Prompts",
-    "command.editPrompt.title": "Edit Prompt"
+    "command.editPrompt.title": "Edit Prompt",
+    "command.copyClipboardItem.title": "Copy Clipboard Item",
+    "command.pinClipboardItem.title": "Pin to Prompts",
+    "command.editClipboardItem.title": "Edit as Prompt",
+    "command.removeClipboardItem.title": "Remove from History",
+    "command.clearClipboardHistory.title": "Clear Clipboard History",
+    "command.moveUp.title": "Move Up",
+    "command.moveDown.title": "Move Down"
 }

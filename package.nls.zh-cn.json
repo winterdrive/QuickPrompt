@@ -1,6 +1,6 @@
 {
     "extension.displayName": "Quick Prompt",
-    "extension.description": "快速管理和使用 Prompt 的 VSCode 扩展。组织、搜索、重用您的 ChatGPT、Copilot、Claude 提示词。快速复制、智能追踪、工作区隔离。",
+    "extension.description": "快速管理和使用 Prompt 的 VSCode 扩展。组织、搜索、重用您的 ChatGPT、Copilot、Claude 提示词。快速复制、智能追踪、工作区隔离、剪贴板历史。",
     "view.container.title": "Quick Prompt",
     "view.prompts.name": "Prompts",
     "command.search.title": "搜索 Prompt",
@@ -10,5 +10,12 @@
     "command.deletePrompt.title": "删除 Prompt",
     "command.togglePin.title": "固定/取消固定",
     "command.refresh.title": "刷新",
-    "command.editPrompt.title": "编辑 Prompt"
+    "command.editPrompt.title": "编辑 Prompt",
+    "command.copyClipboardItem.title": "复制剪贴板项目",
+    "command.pinClipboardItem.title": "固定到 Prompts",
+    "command.editClipboardItem.title": "编辑为 Prompt",
+    "command.removeClipboardItem.title": "从历史移除",
+    "command.clearClipboardHistory.title": "清空剪贴板历史",
+    "command.moveUp.title": "上移",
+    "command.moveDown.title": "下移"
 }
