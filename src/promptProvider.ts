@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { I18n } from './i18n';
-import { ClipboardManager, ClipboardHistoryItem } from './clipboardManager';
+import { ClipboardManager } from './clipboardManager';
 import {
     getPromptIcon,
     sortPrompts,
@@ -23,45 +23,8 @@ export interface Prompt {
     order?: number;           // 手動排序順序
 }
 
-// 基礎 TreeItem 類型
-export type PromptTreeItem = PromptGroupItem | PromptItem | ClipboardTreeItem;
-
-// 分組項目
-export class PromptGroupItem extends vscode.TreeItem {
-    constructor(
-        public readonly groupId: 'clipboard' | 'prompts',
-        label: string,
-        count: number
-    ) {
-        super(label, vscode.TreeItemCollapsibleState.Expanded);
-        this.description = `(${count})`;
-        this.contextValue = groupId === 'clipboard' ? 'clipboardGroup' : 'promptGroup';
-        this.iconPath = groupId === 'clipboard'
-            ? new vscode.ThemeIcon('clippy')
-            : new vscode.ThemeIcon('bookmark');
-    }
-}
-
-// 剪貼簿歷史項目
-export class ClipboardTreeItem extends vscode.TreeItem {
-    constructor(public readonly item: ClipboardHistoryItem) {
-        super(item.preview, vscode.TreeItemCollapsibleState.None);
-
-        const relativeTime = getRelativeTime(item.timestamp);
-        this.label = `🕐 ${relativeTime} - ${item.preview}`;
-        this.description = I18n.getMessage('clipboard.chars', item.length.toString());
-        this.tooltip = `${item.content}\n\n${I18n.getMessage('clipboard.source.' + item.source)}\n${I18n.getMessage('clipboard.chars', item.length.toString())}\n${new Date(item.timestamp).toLocaleString()}`;
-        this.contextValue = 'clipboardItem';
-        this.iconPath = new vscode.ThemeIcon('history', new vscode.ThemeColor('descriptionForeground'));
-
-        // 點擊時複製
-        this.command = {
-            command: 'promptSniper.copyClipboardItem',
-            title: 'Copy',
-            arguments: [this]
-        };
-    }
-}
+// 基礎 TreeItem 類型 (PromptProvider 只處理 PromptItem)
+export type PromptTreeItem = PromptItem;
 
 export class PromptProvider implements vscode.TreeDataProvider<PromptTreeItem> {
     private _onDidChangeTreeData: vscode.EventEmitter<PromptTreeItem | undefined | null | void> = new vscode.EventEmitter<PromptTreeItem | undefined | null | void>();
@@ -190,42 +153,11 @@ export class PromptProvider implements vscode.TreeDataProvider<PromptTreeItem> {
     }
 
     getChildren(element?: PromptTreeItem): Thenable<PromptTreeItem[]> {
-        // 檢查是否啟用剪貼簿歷史功能
-        const config = vscode.workspace.getConfiguration('quickPrompt.clipboardHistory');
-        const clipboardEnabled = config.get<boolean>('enabled', true);
-
+        // 直接返回 Prompts 列表（不再使用分組）
         if (!element) {
-            // 根層級：顯示兩個分組
-            const groups: PromptTreeItem[] = [];
-
-            // 1. 我的 Prompts（先顯示）
-            groups.push(new PromptGroupItem(
-                'prompts',
-                I18n.getMessage('group.myPrompts'),
-                this.prompts.length
-            ));
-
-            // 2. 剪貼簿歷史（後顯示）
-            if (clipboardEnabled && this.clipboardManager) {
-                const clipboardHistory = this.clipboardManager.getHistory();
-                groups.push(new PromptGroupItem(
-                    'clipboard',
-                    I18n.getMessage('group.clipboardHistory'),
-                    clipboardHistory.length
-                ));
-            }
-
-            return Promise.resolve(groups);
-        } else if (element instanceof PromptGroupItem) {
-            // 分組層級：顯示子項目
-            if (element.groupId === 'clipboard') {
-                const history = this.clipboardManager?.getHistory() || [];
-                return Promise.resolve(history.map(item => new ClipboardTreeItem(item)));
-            } else {
-                // 排序：Pinned 在前，然後按最後使用時間排序
-                const sorted = sortPrompts(this.prompts);
-                return Promise.resolve(sorted.map(p => new PromptItem(p)));
-            }
+            // 排序：Pinned 在前，然後按最後使用時間排序
+            const sorted = sortPrompts(this.prompts);
+            return Promise.resolve(sorted.map(p => new PromptItem(p)));
         }
 
         return Promise.resolve([]);

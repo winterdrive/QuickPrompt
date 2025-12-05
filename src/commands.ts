@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
-import { PromptProvider, PromptItem, ClipboardTreeItem } from './promptProvider';
+import { PromptProvider, PromptItem } from './promptProvider';
+import { ClipboardTreeItem } from './clipboardProvider';
 import { ClipboardManager } from './clipboardManager';
 import { PromptFileSystemProvider } from './promptFileSystem';
 import { I18n } from './i18n';

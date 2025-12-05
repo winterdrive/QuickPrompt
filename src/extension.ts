@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { PromptProvider } from './promptProvider';
+import { ClipboardProvider } from './clipboardProvider';
 import { PromptFileSystemProvider } from './promptFileSystem';
 import { ClipboardManager } from './clipboardManager';
 import { PromptHoverProvider } from './promptHoverProvider';
@@ -11,7 +12,7 @@ export async function activate(context: vscode.ExtensionContext) {
     await I18n.initialize(context);
 
     // Initialize providers
-    const { promptProvider, clipboardManager } = initializeProviders(context);
+    const { promptProvider, clipboardManager, clipboardProvider } = initializeProviders(context);
 
     // Initialize file system
     const fileSystemProvider = initializeFileSystem(context, promptProvider);
@@ -28,6 +29,11 @@ export async function activate(context: vscode.ExtensionContext) {
 
     // Setup cleanup
     setupCleanup(context, clipboardManager);
+
+    // 強制刷新 PromptProvider，確保非同步載入的 prompts 正確顯示
+    // 這是因為 PromptProvider 構造函數中的 loadPrompts() 是非同步的，
+    // 在 registerTreeDataProvider 時可能還未完成載入
+    await promptProvider.refresh();
 }
 
 export function deactivate() { }
@@ -35,9 +41,10 @@ export function deactivate() { }
 // ==================== Initialization Functions ====================
 
 /**
- * Initialize core providers (PromptProvider and ClipboardManager)
+ * Initialize core providers (PromptProvider, ClipboardProvider and ClipboardManager)
  */
 function initializeProviders(context: vscode.ExtensionContext) {
+    // 初始化 PromptProvider
     const promptProvider = new PromptProvider(context);
     vscode.window.registerTreeDataProvider('promptSniperView', promptProvider);
 
@@ -45,10 +52,15 @@ function initializeProviders(context: vscode.ExtensionContext) {
     const clipboardManager = new ClipboardManager(context);
     promptProvider.setClipboardManager(clipboardManager);
 
+    // 初始化 ClipboardProvider (新的獨立剪貼簿視圖)
+    const clipboardProvider = new ClipboardProvider();
+    clipboardProvider.setClipboardManager(clipboardManager);
+    vscode.window.registerTreeDataProvider('clipboardHistoryView', clipboardProvider);
+
     // 註冊即時捕捉（監聽選取變化）
     clipboardManager.registerInstantCapture(context.subscriptions);
 
-    return { promptProvider, clipboardManager };
+    return { promptProvider, clipboardManager, clipboardProvider };
 }
 
 /**

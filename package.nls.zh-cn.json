@@ -3,6 +3,7 @@
     "extension.description": "快速管理和使用 Prompt 的 VSCode 扩展。组织、搜索、重用您的 ChatGPT、Copilot、Claude 提示词。快速复制、智能追踪、工作区隔离、剪贴板历史。",
     "view.container.title": "Quick Prompt",
     "view.prompts.name": "Prompts",
+    "view.clipboard.name": "剪贴板历史",
     "command.search.title": "搜索 Prompt",
     "command.insert.title": "复制 Prompt",
     "command.addPrompt.title": "添加 Prompt",
