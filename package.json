@@ -94,6 +94,12 @@
                     "id": "promptSniperView",
                     "name": "%view.prompts.name%",
                     "icon": "$(list-unordered)"
+                },
+                {
+                    "id": "clipboardHistoryView",
+                    "name": "%view.clipboard.name%",
+                    "icon": "$(clippy)",
+                    "when": "config.quickPrompt.clipboardHistory.enabled"
                 }
             ]
         },
@@ -200,8 +206,8 @@
                 },
                 {
                     "command": "promptSniper.clearClipboardHistory",
-                    "when": "view == promptSniperView",
-                    "group": "navigation@3"
+                    "when": "view == clipboardHistoryView",
+                    "group": "navigation@1"
                 }
             ],
             "view/item/context": [
@@ -237,22 +243,22 @@
                 },
                 {
                     "command": "promptSniper.copyClipboardItem",
-                    "when": "view == promptSniperView && viewItem == clipboardItem",
+                    "when": "view == clipboardHistoryView && viewItem == clipboardItem",
                     "group": "inline@1"
                 },
                 {
                     "command": "promptSniper.pinClipboardItem",
-                    "when": "view == promptSniperView && viewItem == clipboardItem",
+                    "when": "view == clipboardHistoryView && viewItem == clipboardItem",
                     "group": "inline@2"
                 },
                 {
                     "command": "promptSniper.editClipboardItem",
-                    "when": "view == promptSniperView && viewItem == clipboardItem",
+                    "when": "view == clipboardHistoryView && viewItem == clipboardItem",
                     "group": "inline@3"
                 },
                 {
                     "command": "promptSniper.removeClipboardItem",
-                    "when": "view == promptSniperView && viewItem == clipboardItem",
+                    "when": "view == clipboardHistoryView && viewItem == clipboardItem",
                     "group": "inline@4"
                 }
             ],
