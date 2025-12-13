@@ -216,6 +216,21 @@ MIT License
 
 ---
 
+## 🤝 Recommended Companion
+
+### 🗂️ VirtualTabs
+
+**Enhance your AI workflow.**
+
+**Quick Prompt** helps you manage *what* to tell the AI. Pair it with **VirtualTabs** to manage *where* the AI looks.
+
+- **Manage Context**: Group related files across directories regardless of location.
+- **AI-Ready**: Create precise file sets to paste into your LLM context.
+
+[**Get VirtualTabs on VS Code Marketplace**](https://marketplace.visualstudio.com/items?itemName=winterdrive.virtual-tabs) | [**Open VSX Registry**](https://open-vsx.org/extension/winterdrive/virtual-tabs)
+
+---
+
 **Enjoy efficient prompt management!** 🚀
 
 *Made with ❤️ for AI developers*

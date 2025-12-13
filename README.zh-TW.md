@@ -113,4 +113,19 @@ MIT License
 
 ---
 
+## 🤝 推薦搭配
+
+### 🗂️ VirtualTabs
+
+**提升您的 AI 工作流程。**
+
+**Quick Prompt** 幫助您管理*要告訴 AI 什麼*。搭配 **VirtualTabs** 來管理 *AI 要看哪些檔案*。
+
+- **管理上下文**：將不同目錄的相關檔案分組，不受位置限制。
+- **AI 就緒**：建立精確的檔案集合，輕鬆貼入 LLM 上下文。
+
+[**在 VS Code Marketplace 取得 VirtualTabs**](https://marketplace.visualstudio.com/items?itemName=winterdrive.virtual-tabs) | [**Open VSX Registry**](https://open-vsx.org/extension/winterdrive/virtual-tabs)
+
+---
+
 **享受高效的 Prompt 管理體驗！** 🚀
