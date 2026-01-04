@@ -1,10 +1,31 @@
-# Quick Prompt 🎯
->
-> **[繁體中文](README.zh-TW.md)** | English
+# Quick Prompt – AI Prompt Manager & Clipboard History for VS Code
 
-![Quick Prompt Hero Banner](assets/hero_banner_v003.png)
+[![Visual Studio Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/winterdrive.quick-prompt)](https://marketplace.visualstudio.com/items?itemName=winterdrive.quick-prompt)
+[![Installs](https://img.shields.io/visual-studio-marketplace/i/winterdrive.quick-prompt)](https://marketplace.visualstudio.com/items?itemName=winterdrive.quick-prompt)
 
-A lightweight VSCode extension for AI prompt management with automatic clipboard history tracking
+[繁體中文](./README.zh-TW.md) | [English](./README.md)
+
+![Quick Prompt - VS Code AI Prompt Manager & Clipboard History Interface](docs/assets/vscode-quick-prompt-extension-banner.png)
+
+---
+
+## 🚀 What is Quick Prompt?
+
+**Quick Prompt is a VS Code extension that helps developers manage, organize, and instantly access AI prompts and
+clipboard history.** It combines a **prompt library** with **clipboard tracking**, allowing you to build a personalized
+database of high-quality prompts for ChatGPT, Copilot, and Claude without switching context.
+
+---
+
+### ⚡ Why use Quick Prompt?
+
+| Feature          | Native Clipboard | Quick Prompt Extension                    |
+|:-----------------|:-----------------|:------------------------------------------|
+| **History**      | Limited/None     | **Automatic History Tracking**            |
+| **Organization** | None             | **Custom Prompt Library** (Saved to JSON) |
+| **Access**       | Ctrl+V only      | **Searchable Interface** (Alt+P)          |
+
+---
 
 ## ✨ Key Features
 
@@ -17,14 +38,14 @@ A lightweight VSCode extension for AI prompt management with automatic clipboard
 - **⬆️⬇️ Manual Sorting**: Right-click to move prompts up or down
 - **✏️ Native Editing**: Edit prompts like regular files with full VSCode support
 
-![Feature Highlights](assets/feature_highlights_v0003.png)
+![Feature Highlights](docs/assets/feature_highlights_v0003.png)
 
 <details>
 <summary>📖 View Previous Version (Basic UI Reference)</summary>
 
 ### Feature Highlights (Previous Version)
 
-![Feature Highlights - Previous](assets/feature_highlights.png)
+![Feature Highlights - Previous](docs/assets/feature_highlights.png)
 
 *These images show the basic interface and core functionality that remains available in the current version.*
 
@@ -34,13 +55,13 @@ A lightweight VSCode extension for AI prompt management with automatic clipboard
 
 ### Quick Search in Action
 
-![Quick Search Demo](assets/quick_search_demo.png)
+![Quick Search Demo](docs/assets/quick_search_demo.png)
 
 *Unified search interface for both prompts and clipboard history*
 
 ### Sidebar Management
 
-![Sidebar View](assets/sidebar_view.png)
+![Sidebar View](docs/assets/sidebar_view.png)
 
 *Organized view with prompts and clipboard history*
 
@@ -66,13 +87,13 @@ A lightweight VSCode extension for AI prompt management with automatic clipboard
 
 1. Click the Quick Prompt icon in the Activity Bar
 2. **My Prompts** section:
-   - Click to copy
-   - Right-click to move up/down
-   - Inline buttons: Copy, Pin, Edit, Delete
+    - Click to copy
+    - Right-click to move up/down
+    - Inline buttons: Copy, Pin, Edit, Delete
 3. **Clipboard History** section:
-   - Click to copy
-   - Pin to convert to permanent prompt
-   - Inline buttons: Copy, Pin, Edit, Delete
+    - Click to copy
+    - Pin to convert to permanent prompt
+    - Inline buttons: Copy, Pin, Edit, Delete
 
 ### Icon Meanings
 
@@ -96,8 +117,8 @@ A lightweight VSCode extension for AI prompt management with automatic clipboard
 
 1. Click **➕ Add** button in sidebar
 2. In the input box:
-   - **Auto Mode**: Paste content directly (auto-generates title)
-   - **Manual Mode**: Use `Title::Content` format
+    - **Auto Mode**: Paste content directly (auto-generates title)
+    - **Manual Mode**: Use `Title::Content` format
 3. Done!
 
 #### Method 3: From Clipboard History
@@ -167,9 +188,9 @@ Open VSCode Settings and search for "Quick Prompt":
 
 ### Keyboard Shortcuts
 
-| Function        | Windows/Linux | Mac           |
-|----------------|---------------|---------------|
-| Search Prompt  | `Alt+P`       | `Opt+P`       |
+| Function           | Windows/Linux | Mac           |
+|--------------------|---------------|---------------|
+| Search Prompt      | `Alt+P`       | `Opt+P`       |
 | Add from Selection | `Alt+Shift+S` | `Opt+Shift+S` |
 
 ## 💡 Best Practices
@@ -209,6 +230,25 @@ Quick Prompt supports multiple languages:
 - 🇨🇳 简体中文 (Simplified Chinese)
 
 The extension automatically uses your VSCode language setting.
+
+---
+
+## 🤝 Recommended Companion
+
+### 🗂️ VirtualTabs
+
+**Enhance your AI workflow.**
+
+**Quick Prompt** helps you manage *what* to tell the AI. Pair it with **VirtualTabs** to manage *where* the AI looks.
+
+- **Manage Context**: Group related files across directories regardless of location.
+- **AI-Ready**: Create precise file sets to paste into your LLM context.
+
+[**Get VirtualTabs on VS Code Marketplace
+**](https://marketplace.visualstudio.com/items?itemName=winterdrive.virtual-tabs) | [**Open VSX Registry
+**](https://open-vsx.org/extension/winterdrive/virtual-tabs)
+
+---
 
 ## 📄 License
 

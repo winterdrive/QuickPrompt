@@ -1,5 +1,5 @@
 {
-    "extension.displayName": "Quick Prompt",
+    "extension.displayName": "Quick Prompt - AI Prompt Manager & Clipboard History",
     "extension.description": "Organize, search, and reuse your prompts for ChatGPT, Copilot, Claude. Quick copy, smart tracking, workspace isolation, clipboard history.",
     "view.container.title": "Quick Prompt",
     "view.prompts.name": "Prompts",

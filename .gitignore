@@ -8,4 +8,4 @@ node_modules/**
 SEO.md
 dist/**
 tools/**
-docs/**
+docs/specs/**

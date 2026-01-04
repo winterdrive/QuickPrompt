@@ -24,15 +24,7 @@ I18N.md
 SEO.md
 ASSETS_COMPLETION.md
 PUBLISH_CHECKLIST.md
-assets/LOGO_OPTIONS.md
-assets/README.md
-docs/**
-
-# 多餘的圖片檔案（只保留必要的）
-assets/quickprompt_icon_source.svg
-assets/quickprompt_icon.svg
-assets/quickprompt_icon_256.png
-assets/quickprompt_icon_64.png
+docs/specs/**
 
 # 保留以下檔案（會被打包）：
 # - README.md (英文版，Marketplace 主要顯示)
@@ -41,9 +33,9 @@ assets/quickprompt_icon_64.png
 # - LICENSE (授權)
 # - package.json, package.nls*.json (i18n)
 # - dist/** (編譯後的程式碼)
-# - assets/quickprompt_icon_128.png (主 icon)
-# - assets/quickprompt_icon_gray.svg (Activity Bar icon)
-# - assets/hero_banner.png (README 展示)
-# - assets/feature_highlights.png (README 展示)
-# - assets/quick_search_demo.png (README 展示)
-# - assets/sidebar_view.png (README 展示)
+# - docs/assets/quickprompt_icon_128.png (主 icon)
+# - docs/assets/quickprompt_icon_gray.svg (Activity Bar icon)
+# - docs/assets/hero_banner.png (README 展示)
+# - docs/assets/feature_highlights.png (README 展示)
+# - docs/assets/quick_search_demo.png (README 展示)
+# - docs/assets/sidebar_view.png (README 展示)
