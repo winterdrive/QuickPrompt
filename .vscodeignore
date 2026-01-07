@@ -25,6 +25,9 @@ SEO.md
 ASSETS_COMPLETION.md
 PUBLISH_CHECKLIST.md
 docs/specs/**
+docs/index.html
+docs/robots.txt
+llms.txt
 
 # 保留以下檔案（會被打包）：
 # - README.md (英文版，Marketplace 主要顯示)
