@@ -1,0 +1,563 @@
+# Quick Prompt Full Context Documentation
+> This file contains the complete text of all key documentation for Quick Prompt, intended for use by AI agents and LLMs.
+
+---
+# README
+[Quick Prompt README](https://raw.githubusercontent.com/winterdrive/QuickPrompt/master/README.md)
+
+# Quick Prompt – AI Prompt Manager & Clipboard History for VS Code
+
+[![Visual Studio Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/winterdrive.quick-prompt)](https://marketplace.visualstudio.com/items?itemName=winterdrive.quick-prompt)
+[![Installs](https://img.shields.io/visual-studio-marketplace/i/winterdrive.quick-prompt)](https://marketplace.visualstudio.com/items?itemName=winterdrive.quick-prompt)
+[![AI-Ready Context](https://img.shields.io/badge/AI--Ready-LLMS.txt-blue?style=flat-square)](https://winterdrive.github.io/QuickPrompt/llms.txt)
+
+[繁體中文](./README.zh-TW.md) | [English](./README.md)
+
+![Quick Prompt - VS Code AI Prompt Manager & Clipboard History Interface](docs/assets/vscode-quick-prompt-extension-banner.png)
+
+---
+
+## 🚀 What is Quick Prompt?
+
+**Quick Prompt is a VS Code extension that helps developers manage, organize, and instantly access AI prompts and
+clipboard history.** It combines a **prompt library** with **clipboard tracking**, allowing you to build a personalized
+database of high-quality prompts for ChatGPT, Copilot, and Claude without switching context.
+
+---
+
+### ⚡ Why use Quick Prompt?
+
+| Feature          | Native Clipboard | Quick Prompt Extension                    |
+|:-----------------|:-----------------|:------------------------------------------|
+| **History**      | Limited/None     | **Automatic History Tracking**            |
+| **Organization** | None             | **Custom Prompt Library** (Saved to JSON) |
+| **Access**       | Ctrl+V only      | **Searchable Interface** (Alt+P)          |
+
+---
+
+## ✨ Key Features
+
+- **🎯 Lightning Fast Search**: Press `Alt+P` to search prompts and clipboard history, hit Enter to copy
+- **📋 Auto Clipboard History**: Automatically tracks your clipboard - never lose a good prompt again
+- **📊 Smart Tracking**: Tracks usage count and last used time to identify your golden prompts
+- **🚀 Quick Add**: Right-click selected text → "Quick Add Prompt" (or press `Alt+Shift+S`)
+- **🎨 Visual Interface**: Sidebar displays popularity with icons (🔥/⭐/📝)
+- **📁 Project Isolation**: Each workspace has its own independent prompt collection
+- **⬆️⬇️ Manual Sorting**: Right-click to move prompts up or down
+- **✏️ Native Editing**: Edit prompts like regular files with full VSCode support
+
+![Feature Highlights](docs/assets/feature_highlights_v0003.png)
+
+<details>
+<summary>📖 View Previous Version (Basic UI Reference)</summary>
+
+### Feature Highlights (Previous Version)
+
+![Feature Highlights - Previous](docs/assets/feature_highlights.png)
+
+*These images show the basic interface and core functionality that remains available in the current version.*
+
+</details>
+
+## 📸 Screenshots (AI Generated)
+
+### Quick Search in Action
+
+![Quick Search Demo](docs/assets/quick_search_demo.png)
+
+*Unified search interface for both prompts and clipboard history*
+
+### Sidebar Management
+
+![Sidebar View](docs/assets/sidebar_view.png)
+
+*Organized view with prompts and clipboard history*
+
+## 🚀 Quick Start
+
+### First Time Setup
+
+1. Open any project folder in VSCode
+2. The extension will automatically create `.vscode/prompts.json`
+3. Press `Alt+P` (Mac: `Opt+P`) to start using
+
+### Basic Usage
+
+#### Method 1: Quick Search (Recommended) ⚡
+
+1. Press `Alt+P` to open the unified search
+2. Browse **Prompts** and **Clipboard History** in one place
+3. Type keywords to filter
+4. Press `Enter` to copy to clipboard
+5. Paste anywhere with `Ctrl+V`
+
+#### Method 2: Sidebar Operations 📋
+
+1. Click the Quick Prompt icon in the Activity Bar
+2. **My Prompts** section:
+    - Click to copy
+    - Right-click to move up/down
+    - Inline buttons: Copy, Pin, Edit, Delete
+3. **Clipboard History** section:
+    - Click to copy
+    - Pin to convert to permanent prompt
+    - Inline buttons: Copy, Pin, Edit, Delete
+
+### Icon Meanings
+
+- 🔥: Hot (used >= 10 times)
+- ⭐: Frequent (used >= 5 times)
+- 📝: Normal (used > 0 times)
+- 📝: Unused
+- 📌: Pinned
+
+## 📝 Managing Prompts
+
+### Adding Prompts
+
+#### Method 1: Add from Selection (Fastest) 🚀
+
+1. Select text in the editor
+2. Right-click → "Quick Add Prompt" (or press `Alt+Shift+S`)
+3. Done! Title is auto-generated
+
+#### Method 2: Smart Add Mode ⚡
+
+1. Click **➕ Add** button in sidebar
+2. In the input box:
+    - **Auto Mode**: Paste content directly (auto-generates title)
+    - **Manual Mode**: Use `Title::Content` format
+3. Done!
+
+#### Method 3: From Clipboard History
+
+1. Find the item in Clipboard History
+2. Click the **📌 Pin** button
+3. Automatically converts to permanent prompt
+
+### Editing Prompts
+
+- Click the **✏️ Edit** button to open in native editor
+- Edit like a regular file
+- Press `Ctrl+S` to save
+- Full support for Undo/Redo, Auto Save, Format Document
+
+### Organizing Prompts
+
+- **Pin**: Click **📌** to pin important prompts to the top
+- **Sort**: Right-click → Move Up/Down to manually arrange
+- **Delete**: Click **🗑️** to remove (no confirmation needed)
+
+## 📋 Clipboard History
+
+### Auto Capture
+
+The extension automatically captures clipboard content from:
+
+- **VSCode editor**: Instant capture when you copy
+- **External apps**: Captured when you switch back to VSCode
+- **Background polling**: Every 5 seconds (configurable)
+
+### Smart Filtering
+
+- ✅ Deduplication (no repeated entries)
+- ✅ Minimum length filter (default: 10 characters)
+- ✅ Excludes pure numbers
+- ✅ Auto-clean old items (default: 7 days)
+
+### Managing History
+
+- **View**: Check recent items in sidebar
+- **Copy**: Click to copy again
+- **Pin**: Convert to permanent prompt
+- **Edit**: Click edit to save as prompt and open editor
+- **Delete**: Remove individual items
+- **Clear All**: Click the clear button in sidebar title
+
+## ⚙️ Configuration
+
+### Settings
+
+Open VSCode Settings and search for "Quick Prompt":
+
+#### Clipboard History
+
+- `quickPrompt.clipboardHistory.enabled`: Enable/disable auto tracking (default: `true`)
+- `quickPrompt.clipboardHistory.maxItems`: Maximum history items (default: `20`)
+- `quickPrompt.clipboardHistory.enablePolling`: Enable background polling (default: `true`)
+- `quickPrompt.clipboardHistory.pollingInterval`: Polling interval in ms (default: `5000`)
+- `quickPrompt.clipboardHistory.minLength`: Minimum content length (default: `10`)
+- `quickPrompt.clipboardHistory.autoCleanDays`: Auto-clean after N days (default: `7`)
+
+### File Location
+
+- **Workspace Mode**: `.vscode/prompts.json` (independent per project)
+- **Fallback Mode**: Uses extension directory if no workspace is open
+
+### Keyboard Shortcuts
+
+| Function           | Windows/Linux | Mac           |
+|--------------------|---------------|---------------|
+| Search Prompt      | `Alt+P`       | `Opt+P`       |
+| Add from Selection | `Alt+Shift+S` | `Opt+Shift+S` |
+
+## 💡 Best Practices
+
+1. **Save on the Fly**: See a useful prompt? Select and press `Alt+Shift+S`
+2. **Use Clipboard History**: Don't worry about losing copied prompts - they're auto-saved
+3. **Pin Important Ones**: Convert frequently used clipboard items to permanent prompts
+4. **Organize Manually**: Use right-click to arrange prompts in your preferred order
+5. **Version Control**: Add `.vscode/prompts.json` to Git to share with your team
+
+## 🎯 Use Cases
+
+### For AI Development
+
+- Save frequently used ChatGPT/Copilot/Claude prompts
+- Quick access to debugging prompts
+- Organize code review templates
+
+### For Content Creation
+
+- Store writing prompts and templates
+- Quick access to formatting instructions
+- Manage translation prompts
+
+### For Team Collaboration
+
+- Share best prompts via Git
+- Standardize team communication with AI
+- Build a prompt library together
+
+## 🌐 Internationalization
+
+Quick Prompt supports multiple languages:
+
+- 🇺🇸 English
+- 🇹🇼 繁體中文 (Traditional Chinese)
+- 🇨🇳 简体中文 (Simplified Chinese)
+
+The extension automatically uses your VSCode language setting.
+
+---
+
+## 🤝 Recommended Companion
+
+### 🗂️ VirtualTabs
+
+**Enhance your AI workflow.**
+
+**Quick Prompt** helps you manage *what* to tell the AI. Pair it with **VirtualTabs** to manage *where* the AI looks.
+
+- **Manage Context**: Group related files across directories regardless of location.
+- **AI-Ready**: Create precise file sets to paste into your LLM context.
+
+[**Get VirtualTabs on VS Code Marketplace
+**](https://marketplace.visualstudio.com/items?itemName=winterdrive.virtual-tabs) | [**Open VSX Registry
+**](https://open-vsx.org/extension/winterdrive/virtual-tabs)
+
+---
+
+## 📄 License
+
+MIT License
+
+---
+
+**Enjoy efficient prompt management!** 🚀
+
+*Made with ❤️ for AI developers*
+
+---
+# DEVELOPMENT GUIDE
+[Quick Prompt Development Guide](https://raw.githubusercontent.com/winterdrive/QuickPrompt/master/DEVELOPMENT.md)
+
+# Quick Prompt Development Guide
+
+This document provides a complete guide for setting up the development environment and workflow for the Quick Prompt VS Code extension.
+
+---
+
+## 🛠️ Environment Setup
+
+### System Requirements
+
+* **Node.js** (Recommended v16 or above)
+* **VS Code** (v1.75.0 or above)
+* **TypeScript** (included in devDependencies)
+
+### Setup Steps
+
+#### 1. Project Initialization
+
+```bash
+# Clone the project and enter the directory
+git clone https://github.com/winterdrive/QuickPrompt.git
+cd QuickPrompt
+
+# Install dependencies
+npm install
+```
+
+#### 2. Compile TypeScript
+
+```bash
+# One-time compilation
+npx tsc
+
+# Or use npm script
+npm run vscode:prepublish
+```
+
+#### 3. Start Development Mode
+
+There are two ways to start development mode:
+
+##### Method A: Use VS Code Debugging
+
+1. Open the project folder in VS Code
+2. Press `F5` or use the Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`)
+3. Select "Debug: Start Debugging"
+4. A new Extension Development Host window will open
+
+##### Method B: Use Command Line
+
+```bash
+# macOS/Linux
+code --extensionDevelopmentPath=. --new-window
+
+# Windows
+code.cmd --extensionDevelopmentPath=. --new-window
+```
+
+#### 4. Live Development & Debugging
+
+##### Start TypeScript Watch Mode
+
+```bash
+# Start TypeScript watch mode for auto-compilation
+npx tsc --watch
+
+# Or use VS Code tasks
+# Press Cmd+Shift+P → "Tasks: Run Task" → "tsc: watch - tsconfig.json"
+```
+
+##### Reload the Extension
+
+In the Extension Development Host window:
+
+* Press `Cmd+R` (macOS) or `Ctrl+R` (Windows/Linux) to reload
+* Or use Command Palette → "Developer: Reload Window"
+
+---
+
+## 📁 Project Structure
+
+### Directory Overview
+
+```text
+QuickPrompt/
+├── .vscode/               # VS Code config files
+├── dist/                  # TypeScript build output
+├── i18n/                  # Internationalization files
+│   ├── en.json           # English messages
+│   ├── zh-tw.json        # Traditional Chinese messages
+│   └── zh-cn.json        # Simplified Chinese messages
+├── src/                   # TypeScript source code
+│   ├── extension.ts       # Extension entry (activate/deactivate)
+│   ├── promptProvider.ts  # TreeDataProvider implementation
+│   ├── promptFileSystem.ts # Virtual file system for editing prompts
+│   ├── clipboardManager.ts # Clipboard listener and history management
+│   ├── clipboardProvider.ts # TreeDataProvider for clipboard history
+│   └── i18n.ts           # Internationalization utility
+├── package.json           # Extension manifest
+├── package.nls.json       # English localization (package.json)
+├── package.nls.zh-tw.json # Traditional Chinese localization
+├── package.nls.zh-cn.json # Simplified Chinese localization
+├── tsconfig.json          # TypeScript config
+├── README.md              # User guide
+├── DEVELOPMENT.md         # This file
+└── LICENSE                # MIT License
+```
+
+### Module Responsibilities
+
+| Module File             | Description                                      | Main Class/Interface |
+| ----------------------- | ------------------------------------------------ | -------------------- |
+| `extension.ts`          | Extension lifecycle management, command registration | `activate()`, `deactivate()` |
+| `promptProvider.ts`     | Implements `TreeDataProvider`, manages prompt data | `PromptProvider`, `PromptItem` |
+| `promptFileSystem.ts`   | Virtual file system for editing prompts in native VSCode editor | `PromptFileSystemProvider` |
+| `clipboardManager.ts`   | Clipboard listener and history tracking (polling/focus) | `ClipboardManager` |
+| `clipboardProvider.ts`  | Implements `TreeDataProvider` for clipboard history view | `ClipboardProvider` |
+| `i18n.ts`               | Internationalization utility, loads language files | `I18n` |
+
+### Core Data Flow
+
+```mermaid
+flowchart TD
+    A[Extension Startup] --> B[Initialize i18n]
+    B --> C[Initialize PromptProvider]
+    C --> D[Load prompts.json]
+    D --> E[Register TreeView]
+    E --> F[Register FileSystem]
+    F --> G[Register Commands]
+    H[User Actions] --> I[Command Execution]
+    I --> J[Update Prompt Data]
+    J --> K[Save prompts.json]
+    K --> L[Trigger UI Refresh]
+    L --> M[Sync FileSystem]
+```
+
+---
+
+## 🌍 Internationalization (i18n)
+
+Quick Prompt supports multiple languages out of the box.
+
+### Supported Languages
+
+* **English** (`en`)
+* **Traditional Chinese** (`zh-tw`)
+* **Simplified Chinese** (`zh-cn`)
+
+### How It Works
+
+1. **package.json**: Uses `%key%` placeholders that reference `package.nls.json` files
+2. **Runtime Messages**: Uses `I18n.getMessage()` to load strings from `i18n/*.json` files
+3. **Auto-detection**: Automatically loads the correct language based on VS Code's locale setting
+
+### Adding a New Language
+
+1. Create `package.nls.[locale].json` (e.g., `package.nls.ja.json` for Japanese)
+2. Create `i18n/[locale].json` (e.g., `i18n/ja.json`)
+3. Translate all strings from the English versions
+4. Test by setting VS Code locale to your language
+
+---
+
+## 🔧 Common Development Issues
+
+### Q: Compile error "Cannot find module 'vscode'"
+
+```bash
+# Make sure the correct @types/vscode version is installed
+npm install --save-dev @types/vscode@^1.75.0
+```
+
+### Q: Extension does not appear in Extension Development Host
+
+* Check if the `main` field in `package.json` points to the correct build file
+* Ensure TypeScript compiles without errors
+* Check Developer Tools Console for errors
+
+### Q: Code changes are not reflected
+
+* Make sure TypeScript has recompiled (check the `dist/` folder)
+* Reload the window in Extension Development Host (`Cmd+R`)
+
+### Q: i18n strings not showing correctly
+
+* Check if the language file exists in `i18n/` directory
+* Verify the locale code matches VS Code's language setting
+* Ensure `I18n.initialize()` is called in `activate()`
+
+---
+
+## 🔁 Data Flow & Architecture
+
+### Prompt Data Structure
+
+```typescript
+interface Prompt {
+    id: string;           // Unique ID (e.g., "001", "002")
+    title: string;        // Prompt title
+    content: string;      // Prompt content
+    use_count: number;    // Usage count
+    last_used: string;    // Last used date (ISO format)
+    created_at: string;   // Creation date (ISO format)
+    pinned?: boolean;     // Whether pinned
+}
+```
+
+### Storage Location
+
+* **Workspace Mode**: `.vscode/prompts.json` (recommended, workspace-specific)
+* **Fallback Mode**: Extension directory (when no workspace is open)
+
+### Virtual File System
+
+Quick Prompt uses a custom file system provider (`prompt-sniper://`) to allow editing prompts in the native VSCode editor:
+
+* **URI Format**: `prompt-sniper://prompt/{id}.txt`
+* **Two-way Sync**: Changes in the editor automatically update `prompts.json`
+* **Native Experience**: Full VSCode editing features (syntax highlighting, undo/redo, etc.)
+
+---
+
+## 🚀 Publishing & Deployment
+
+### Local Testing
+
+1. Ensure TypeScript compiles without errors
+2. Test all features in Extension Development Host
+3. Check version and dependencies in package.json
+
+### Package Extension
+
+```bash
+# Install vsce (Visual Studio Code Extension manager)
+npm install -g vsce
+
+# Package as .vsix file
+vsce package
+
+# Publish to VS Code Marketplace
+vsce publish
+```
+
+### Version Management
+
+```bash
+# Update version
+npm version patch  # Patch version (0.0.1 → 0.0.2)
+npm version minor  # Minor version (0.0.1 → 0.1.0)
+npm version major  # Major version (0.0.1 → 1.0.0)
+```
+
+---
+
+## 🤝 Contribution Guide
+
+### Development Workflow
+
+1. Fork the project and create a feature branch
+2. Follow the existing code style and architecture
+3. Add appropriate comments and documentation
+4. Test new features or fixes
+5. Submit a Pull Request
+
+### Code Style
+
+* Use TypeScript strict mode
+* Follow existing naming conventions
+* Use JSDoc comments where appropriate
+* Keep functions focused and modular
+
+### Testing Checklist
+
+* [ ] TypeScript compiles without errors
+* [ ] All features work in Extension Development Host
+* [ ] i18n strings work in all supported languages
+* [ ] Virtual file system editing works
+* [ ] Commands work from both sidebar and command palette
+* [ ] Workspace isolation works correctly
+
+---
+
+## 📚 Resources
+
+* [VS Code Extension API](https://code.visualstudio.com/api)
+* [VS Code Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
+* [TreeView API Documentation](https://code.visualstudio.com/api/extension-guides/tree-view)
+* [FileSystemProvider API](https://code.visualstudio.com/api/references/vscode-api#FileSystemProvider)
+* [Internationalization Guide](https://code.visualstudio.com/api/working-with-extensions/publishing-extension#internationalization)
