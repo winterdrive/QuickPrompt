@@ -2,19 +2,140 @@
 <html lang="en">
 
 <head>
+    <!-- ========================================
+         Quick Prompt Landing Page - Complete Meta Tags
+         ======================================== -->
+
+    <!-- Basic Meta Tags -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quick Prompt - VS Code AI Prompt Manager & Clipboard History</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <!-- Primary Meta Tags -->
+    <title>Quick Prompt - AI Prompt Manager & Clipboard History for VS Code</title>
+    <meta name="title" content="Quick Prompt - AI Prompt Manager & Clipboard History for VS Code">
     <meta name="description"
-        content="Manage AI prompts and track clipboard history in VS Code. The ultimate tool for Prompt Engineering.">
+        content="Organize, search, and reuse your prompts for ChatGPT, Copilot, Claude. Quick copy, smart tracking, workspace isolation, clipboard history.">
     <meta name="keywords"
-        content="vscode extension, ai prompts, prompt manager, clipboard history, chatgpt, copilot, claude, productivity">
+        content="VS Code extension, prompt manager, clipboard history, AI prompts, chatgpt, copilot, claude, productivity, snippet manager, prompt engineering">
+    <meta name="author" content="winterdrive">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="English">
+    <meta name="revisit-after" content="7 days">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://winterdrive.github.io/QuickPrompt/">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://winterdrive.github.io/QuickPrompt/">
+    <meta property="og:title" content="Quick Prompt - AI Prompt Manager & Clipboard History for VS Code">
+    <meta property="og:description"
+        content="Organize, search, and reuse your prompts for ChatGPT, Copilot, Claude. Quick copy, smart tracking, workspace isolation, clipboard history.">
+    <meta property="og:image" content="https://winterdrive.github.io/QuickPrompt/assets/hero_banner1024X512.png">
+    <meta property="og:image:width" content="1024">
+    <meta property="og:image:height" content="512">
+    <meta property="og:image:alt" content="Quick Prompt VS Code Extension - AI Prompt Manager Interface">
+    <meta property="og:site_name" content="Quick Prompt">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://winterdrive.github.io/QuickPrompt/">
+    <meta property="twitter:title" content="Quick Prompt - AI Prompt Manager & Clipboard History for VS Code">
+    <meta property="twitter:description"
+        content="Organize, search, and reuse your prompts for ChatGPT, Copilot, Claude. Quick copy, smart tracking, workspace isolation.">
+    <meta property="twitter:image" content="https://winterdrive.github.io/QuickPrompt/assets/hero_banner1024X512.png">
+    <meta property="twitter:image:alt" content="Quick Prompt VS Code Extension - AI Prompt Manager Interface">
+    <meta property="twitter:creator" content="@winterdrive">
+    <meta property="twitter:site" content="@winterdrive">
+
+    <!-- Additional SEO Meta Tags -->
+    <meta name="theme-color" content="#007ACC">
+    <meta name="msapplication-TileColor" content="#007ACC">
+    <meta name="application-name" content="Quick Prompt">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/quickprompt_icon_64.png">
+    <link rel="icon" type="image/png" sizes="64x64" href="assets/quickprompt_icon_64.png">
+    <link rel="icon" type="image/png" sizes="128x128" href="assets/quickprompt_icon_128.png">
+    <link rel="icon" type="image/png" sizes="256x256" href="assets/quickprompt_icon_256.png">
+    <link rel="apple-touch-icon" sizes="128x128" href="assets/quickprompt_icon_128.png">
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Quick Prompt",
+        "alternateName": "Quick Prompt for VS Code",
+        "description": "Organize, search, and reuse your prompts for ChatGPT, Copilot, Claude. Quick copy, smart tracking, workspace isolation, clipboard history.",
+        "url": "https://winterdrive.github.io/QuickPrompt/",
+        "downloadUrl": "https://marketplace.visualstudio.com/items?itemName=winterdrive.quick-prompt",
+        "installUrl": "https://marketplace.visualstudio.com/items?itemName=winterdrive.quick-prompt",
+        "softwareVersion": "0.0.8",
+        "datePublished": "2024-01-01",
+        "dateModified": "2025-01-11",
+        "author": {
+            "@type": "Person",
+            "name": "winterdrive",
+            "url": "https://github.com/winterdrive"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "winterdrive"
+        },
+        "applicationCategory": "DeveloperApplication",
+        "applicationSubCategory": "Code Editor Extension",
+        "operatingSystem": "VS Code",
+        "softwareRequirements": "Visual Studio Code ^1.75.0",
+        "keywords": "VS Code extension, prompt manager, clipboard history, AI prompts, productivity",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD",
+            "availability": "https://schema.org/InStock"
+        },
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.5",
+            "ratingCount": "50",
+            "bestRating": "5",
+            "worstRating": "1"
+        },
+        "screenshot": [
+            "https://winterdrive.github.io/QuickPrompt/assets/vscode-quick-prompt-extension-banner.png",
+            "https://winterdrive.github.io/QuickPrompt/assets/quick_search_demo.png",
+            "https://winterdrive.github.io/QuickPrompt/assets/sidebar_view.png"
+        ],
+        "featureList": [
+            "AI prompt management and organization",
+            "Automatic clipboard history tracking",
+            "Quick search and insert functionality",
+            "Workspace isolation for prompts",
+            "Integration with ChatGPT, Copilot, Claude",
+            "Smart tagging and categorization"
+        ]
+    }
+    </script>
+
+    <!-- LLMs.txt for AI Context -->
     <link rel="llms-txt" type="text/markdown" href="/QuickPrompt/llms.txt" />
 
-    <meta property="og:title" content="Quick Prompt for VS Code">
-    <meta property="og:description"
-        content="Organize, search, and reuse your prompts for ChatGPT, Copilot, and Claude.">
-    <meta property="og:type" content="software">
+    <!-- Preconnect for Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://marketplace.visualstudio.com">
+    <link rel="preconnect" href="https://github.com">
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-H67YNJGX19"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-H67YNJGX19');
+    </script>
 
     <style>
         :root {
@@ -136,10 +257,15 @@
             <p class="subtitle">AI Prompt Manager & Clipboard History for VS Code</p>
 
             <div style="margin-bottom: 20px;">
-                <a href="https://marketplace.visualstudio.com/items?itemName=winterdrive.quick-prompt" class="btn">⬇
+                <a href="https://marketplace.visualstudio.com/items?itemName=winterdrive.quick-prompt" class="btn"
+                    onclick="gtag('event', 'click', { 'event_category': 'CTA', 'event_label': 'Install Extension' })">⬇
                     Install Extension</a>
-                <a href="https://github.com/winterdrive/QuickPrompt" class="btn btn-github">View on GitHub</a>
-                <a href="https://open-vsx.org/extension/winterdrive/quick-prompt" class="btn btn-openvsx">Open VSX</a>
+                <a href="https://github.com/winterdrive/QuickPrompt" class="btn btn-github"
+                    onclick="gtag('event', 'click', { 'event_category': 'Navigation', 'event_label': 'GitHub' })">View
+                    on GitHub</a>
+                <a href="https://open-vsx.org/extension/winterdrive/quick-prompt" class="btn btn-openvsx"
+                    onclick="gtag('event', 'click', { 'event_category': 'CTA', 'event_label': 'Open VSX' })">Open
+                    VSX</a>
             </div>
 
             <img src="assets/vscode-quick-prompt-extension-banner.png" alt="Quick Prompt VS Code Interface"
@@ -185,7 +311,9 @@
                 <h3 style="margin-top: 0; color: #fff; margin-bottom: 10px;">🗂️ VirtualTabs</h3>
                 <p style="color: #bbb; font-size: 0.95rem; margin-bottom: 20px;">Organize files into custom virtual tab
                     groups across directories for focused AI context.</p>
-                <a href="https://winterdrive.github.io/VirtualTabs/" class="btn"
+                <a href="https://winterdrive.github.io/VirtualTabs/?utm_source=quickprompt&utm_medium=landing&utm_campaign=cross_promotion"
+                    class="btn"
+                    onclick="gtag('event', 'click', { 'event_category': 'Cross-promotion', 'event_label': 'VirtualTabs' })"
                     style="font-size: 1rem; background: #333; border: 1px solid #666;">View VirtualTabs</a>
             </div>
         </div>

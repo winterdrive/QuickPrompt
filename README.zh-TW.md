@@ -143,9 +143,7 @@
 - **管理上下文**：將不同目錄的相關檔案分組，不受位置限制。
 - **AI 就緒**：建立精確的檔案集合，輕鬆貼入 LLM 上下文。
 
-[**在 VS Code Marketplace 取得 VirtualTabs
-**](https://marketplace.visualstudio.com/items?itemName=winterdrive.virtual-tabs) | [**Open VSX Registry
-**](https://open-vsx.org/extension/winterdrive/virtual-tabs)
+[**在 VS Code Marketplace 取得 VirtualTabs**](https://marketplace.visualstudio.com/items?itemName=winterdrive.virtual-tabs?utm_source=quickprompt&utm_medium=readme&utm_campaign=cross_promotion) | [**Open VSX Registry**](https://open-vsx.org/extension/winterdrive/virtual-tabs?utm_source=quickprompt&utm_medium=readme&utm_campaign=cross_promotion)
 
 ---
 
