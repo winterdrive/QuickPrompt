@@ -29,6 +29,7 @@
 
 ## ✨ 核心特色
 
+- **🤖 AI 智慧標題**：使用本地 AI 模型 (Qwen1.5-0.5B) 自動生成語義化標題
 - **🎯 極速複製**：按 `Alt+P` 搜尋 Prompt，按 Enter 直接複製到剪貼簿
 - **📋 自動剪貼簿歷史**：自動追蹤您的剪貼簿 - 再也不會遺失好用的 Prompt
 - **📊 智慧追蹤**：自動記錄使用次數和最後使用時間，找出您的黃金 Prompt
@@ -112,6 +113,11 @@
 
 ## ⚙️ 設定
 
+### AI 功能設定
+
+- `quickPrompt.ai.enabled`: 啟用/停用 AI 功能（預設：`true`）
+- `quickPrompt.ai.autoGenerateTitle`: 自動生成標題（預設：`true`）
+
 ### 檔案位置
 
 - **工作區模式**：`.vscode/prompts.json`（每個專案獨立）
@@ -143,7 +149,7 @@
 - **管理上下文**：將不同目錄的相關檔案分組，不受位置限制。
 - **AI 就緒**：建立精確的檔案集合，輕鬆貼入 LLM 上下文。
 
-[**在 VS Code Marketplace 取得 VirtualTabs**](https://marketplace.visualstudio.com/items?itemName=winterdrive.virtual-tabs?utm_source=quickprompt&utm_medium=readme&utm_campaign=cross_promotion) | [**Open VSX Registry**](https://open-vsx.org/extension/winterdrive/virtual-tabs?utm_source=quickprompt&utm_medium=readme&utm_campaign=cross_promotion)
+在 [**VS Code Marketplace**](https://marketplace.visualstudio.com/items?itemName=winterdrive.virtual-tabs?utm_source=quickprompt&utm_medium=readme&utm_campaign=cross_promotion) | [**Open VSX Registry**](https://open-vsx.org/extension/winterdrive/virtual-tabs?utm_source=quickprompt&utm_medium=readme&utm_campaign=cross_promotion) 取得 VirtualTabs
 
 ---
 

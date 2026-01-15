@@ -6,7 +6,8 @@
     "view.clipboard.name": "Clipboard History",
     "command.search.title": "Search Prompts",
     "command.insert.title": "Copy Prompt",
-    "command.addPrompt.title": "Add Prompt",
+    "command.addPrompt.title": "Add Prompt (Auto Title)",
+    "command.addPromptWithTitle.title": "Add Prompt (Custom Title)",
     "command.silentAdd.title": "Quick Add Prompt (Selection)",
     "command.deletePrompt.title": "Delete Prompt",
     "command.togglePin.title": "Pin/Unpin Prompt",
@@ -18,5 +19,6 @@
     "command.removeClipboardItem.title": "Remove from History",
     "command.clearClipboardHistory.title": "Clear Clipboard History",
     "command.moveUp.title": "Move Up",
-    "command.moveDown.title": "Move Down"
+    "command.moveDown.title": "Move Down",
+    "command.clearModelCache.title": "Clear AI Model Cache"
 }

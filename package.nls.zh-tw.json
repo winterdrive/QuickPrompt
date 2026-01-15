@@ -6,7 +6,8 @@
     "view.clipboard.name": "剪貼簿歷史",
     "command.search.title": "搜尋 Prompt",
     "command.insert.title": "複製 Prompt",
-    "command.addPrompt.title": "新增 Prompt",
+    "command.addPrompt.title": "新增 Prompt (自動標題)",
+    "command.addPromptWithTitle.title": "新增 Prompt (自訂標題)",
     "command.silentAdd.title": "快速新增 Prompt (選取)",
     "command.deletePrompt.title": "刪除 Prompt",
     "command.togglePin.title": "釘選/取消釘選",
@@ -18,5 +19,6 @@
     "command.removeClipboardItem.title": "從歷史移除",
     "command.clearClipboardHistory.title": "清空剪貼簿歷史",
     "command.moveUp.title": "上移",
-    "command.moveDown.title": "下移"
+    "command.moveDown.title": "下移",
+    "command.clearModelCache.title": "清除 AI 模型快取"
 }

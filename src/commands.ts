@@ -5,6 +5,7 @@ import { ClipboardManager } from './clipboardManager';
 import { PromptFileSystemProvider } from './promptFileSystem';
 import { I18n } from './i18n';
 import { getPromptQuickPickIcon, sortPrompts, generateAutoTitle, getRelativeTime } from './utils';
+import { AIEngine } from './ai/aiEngine';
 
 /**
  * Register all prompt-related commands
@@ -13,7 +14,8 @@ export function registerPromptCommands(
     context: vscode.ExtensionContext,
     promptProvider: PromptProvider,
     clipboardManager: ClipboardManager,
-    fileSystemProvider: PromptFileSystemProvider
+    fileSystemProvider: PromptFileSystemProvider,
+    aiEngine: AIEngine
 ): void {
     // 搜尋 Prompt（整合剪貼簿歷史）
     context.subscriptions.push(
@@ -36,10 +38,17 @@ export function registerPromptCommands(
         })
     );
 
+    // 新增 Prompt - 自訂標題模式
+    context.subscriptions.push(
+        vscode.commands.registerCommand('promptSniper.addPromptWithTitle', async () => {
+            await handleAddPromptWithTitle(promptProvider, aiEngine);
+        })
+    );
+
     // 新增 Prompt - Silent Capture (無干擾捕捉)
     context.subscriptions.push(
         vscode.commands.registerCommand('promptSniper.silentAdd', async () => {
-            await handleSilentAdd(promptProvider);
+            await handleSilentAdd(promptProvider, aiEngine);
         })
     );
 
@@ -94,7 +103,8 @@ export function registerClipboardCommands(
     context: vscode.ExtensionContext,
     promptProvider: PromptProvider,
     clipboardManager: ClipboardManager,
-    fileSystemProvider: PromptFileSystemProvider
+    fileSystemProvider: PromptFileSystemProvider,
+    aiEngine: AIEngine
 ): void {
     // 複製剪貼簿歷史項目
     context.subscriptions.push(
@@ -106,7 +116,7 @@ export function registerClipboardCommands(
     // 固定剪貼簿項目到 Prompts（無需輸入標題，靜默模式）
     context.subscriptions.push(
         vscode.commands.registerCommand('promptSniper.pinClipboardItem', async (item: ClipboardTreeItem) => {
-            await handlePinClipboardItem(item, promptProvider, clipboardManager);
+            await handlePinClipboardItem(item, promptProvider, clipboardManager, aiEngine);
         })
     );
 
@@ -128,6 +138,13 @@ export function registerClipboardCommands(
     context.subscriptions.push(
         vscode.commands.registerCommand('promptSniper.clearClipboardHistory', async () => {
             await handleClearClipboardHistory(clipboardManager);
+        })
+    );
+
+    // 清除 AI 模型快取
+    context.subscriptions.push(
+        vscode.commands.registerCommand('promptSniper.clearModelCache', async () => {
+            await handleClearModelCache(aiEngine);
         })
     );
 }
@@ -263,9 +280,41 @@ async function handleAddPrompt(promptProvider: PromptProvider): Promise<void> {
 }
 
 /**
+ * Handle add prompt with custom title command
+ */
+async function handleAddPromptWithTitle(promptProvider: PromptProvider, aiEngine: AIEngine): Promise<void> {
+    // 1. 輸入內容
+    const content = await vscode.window.showInputBox({
+        prompt: I18n.getMessage('input.addPromptPrompt'),
+        placeHolder: I18n.getMessage('input.addPromptPlaceholder'),
+        validateInput: (value) => {
+            if (!value || value.trim().length === 0) {
+                return I18n.getMessage('input.contentRequired');
+            }
+            return null;
+        }
+    });
+
+    if (!content) return;
+
+    // 2. 輸入標題
+    const title = await vscode.window.showInputBox({
+        prompt: I18n.getMessage('input.pinPromptTitle'),
+        placeHolder: generateAutoTitle(content),
+        value: generateAutoTitle(content)
+    });
+
+    if (title === undefined) return;
+
+    const finalTitle = title.trim() || generateAutoTitle(content);
+
+    await promptProvider.addPrompt(finalTitle, content, 'user');
+}
+
+/**
  * Handle silent add command
  */
-async function handleSilentAdd(promptProvider: PromptProvider): Promise<void> {
+async function handleSilentAdd(promptProvider: PromptProvider, aiEngine: AIEngine): Promise<void> {
     const editor = vscode.window.activeTextEditor;
     if (!editor) {
         vscode.window.showWarningMessage(I18n.getMessage('message.pleaseSelectText'));
@@ -278,11 +327,30 @@ async function handleSilentAdd(promptProvider: PromptProvider): Promise<void> {
         return;
     }
 
-    // 自動生成標題
-    const autoTitle = generateAutoTitle(selection);
+    // 嘗試使用 AI 生成標題,如果 AI 不可用則使用預設策略
+    let autoTitle: string = '';
+    const config = vscode.workspace.getConfiguration('quickPrompt.ai');
+    const useAI = config.get<boolean>('autoGenerateTitle', true) && aiEngine.isReady();
+
+    if (useAI) {
+        try {
+            // 顯示狀態列動畫
+            await vscode.window.withProgress({
+                location: vscode.ProgressLocation.Window,
+                title: I18n.getMessage('status.generatingTitle')
+            }, async () => {
+                autoTitle = await aiEngine.summarize(selection, 50);
+            });
+        } catch (error) {
+            console.error('[Commands] AI title generation failed:', error);
+            autoTitle = generateAutoTitle(selection);
+        }
+    } else {
+        autoTitle = generateAutoTitle(selection);
+    }
 
     // 直接儲存，並顯示通知 (silent=false)
-    await promptProvider.addPromptWithOption(autoTitle, selection, false);
+    await promptProvider.addPromptWithOption(autoTitle, selection, false, useAI ? 'ai' : undefined);
 }
 
 /**
@@ -319,17 +387,47 @@ async function handleCopyClipboardItem(item: ClipboardTreeItem): Promise<void> {
 async function handlePinClipboardItem(
     item: ClipboardTreeItem,
     promptProvider: PromptProvider,
-    clipboardManager: ClipboardManager
+    clipboardManager: ClipboardManager,
+    aiEngine: AIEngine
 ): Promise<void> {
     if (!item || !item.item) return;
 
-    // 直接使用預覽文字作為標題
-    const title = generateAutoTitle(item.item.preview);
+    // 嘗試使用 AI 生成標題
+    let aiTitle: string = '';
+    const config = vscode.workspace.getConfiguration('quickPrompt.ai');
+    const useAI = config.get<boolean>('autoGenerateTitle', true) && aiEngine.isReady();
 
-    // 使用 silent 模式，避免彈出通知
-    await promptProvider.addPromptWithOption(title, item.item.content, true);
+    if (useAI) {
+        try {
+            await vscode.window.withProgress({
+                location: vscode.ProgressLocation.Window,
+                title: I18n.getMessage('status.generatingTitle')
+            }, async () => {
+                aiTitle = await aiEngine.summarize(item.item.content, 50);
+            });
+        } catch (error) {
+            console.error('[Commands] AI title generation failed:', error);
+            aiTitle = generateAutoTitle(item.item.preview);
+        }
+    } else {
+        aiTitle = generateAutoTitle(item.item.preview);
+    }
+
+    // 彈出輸入框讓使用者確認或修改標題
+    const title = await vscode.window.showInputBox({
+        prompt: I18n.getMessage('input.pinPromptTitle'),
+        placeHolder: aiTitle,
+        value: aiTitle
+    });
+
+    if (title === undefined) return; // 使用者取消
+
+    const finalTitle = title.trim() || aiTitle;
+
+    // 使用 silent 模式，避免彈出重複的通知
+    await promptProvider.addPromptWithOption(finalTitle, item.item.content, true, useAI ? 'ai' : undefined);
     clipboardManager.removeFromHistory(item.item.id);
-    vscode.window.setStatusBarMessage(`✅ 已固定: ${title}`, 2000);
+    vscode.window.setStatusBarMessage(`✅ 已固定: ${finalTitle}`, 2000);
 }
 
 /**
@@ -388,5 +486,26 @@ async function handleClearClipboardHistory(clipboardManager: ClipboardManager): 
     if (confirm === I18n.getMessage('confirm.yes')) {
         clipboardManager.clearHistory();
         vscode.window.showInformationMessage(I18n.getMessage('message.clipboardHistoryCleared'));
+    }
+}
+
+/**
+ * Handle clear AI model cache command
+ */
+async function handleClearModelCache(aiEngine: AIEngine): Promise<void> {
+    const confirm = await vscode.window.showWarningMessage(
+        I18n.getMessage('confirm.clearModelCache'),
+        { modal: true },
+        I18n.getMessage('confirm.yes')
+    );
+
+    if (confirm === I18n.getMessage('confirm.yes')) {
+        try {
+            await aiEngine.clearModelCache();
+            vscode.window.showInformationMessage(I18n.getMessage('message.modelCacheCleared'));
+        } catch (error) {
+            console.error('[Commands] Failed to clear model cache:', error);
+            vscode.window.showErrorMessage(`Failed to clear cache: ${error}`);
+        }
     }
 }

@@ -21,6 +21,7 @@ export interface Prompt {
     created_at: string;       // 建立時間
     pinned?: boolean;         // 是否釘選
     order?: number;           // 手動排序順序
+    titleSource?: 'user' | 'ai';  // 標題來源
 }
 
 // 基礎 TreeItem 類型 (PromptProvider 只處理 PromptItem)
@@ -93,16 +94,17 @@ export class PromptProvider implements vscode.TreeDataProvider<PromptTreeItem> {
                     use_count: p.use_count ?? 0,
                     last_used: p.last_used || today,
                     created_at: p.created_at || p.last_used || today,
-                    pinned: p.pinned ?? false
+                    pinned: p.pinned ?? false,
+                    titleSource: p.titleSource,
+                    order: p.order
                 };
             });
 
             this.prompts = prompts;
 
-            // 如果有遷移，自動儲存清理後的資料
+            // 如果有遷移,自動儲存清理後的資料(靜默模式)
             if (needsMigration) {
                 await this.savePrompts();
-                vscode.window.showInformationMessage('✨ 已自動更新 Prompt 資料格式');
             }
         } catch (error: any) {
             if (error.code === 'FileNotFound') {
@@ -179,12 +181,17 @@ export class PromptProvider implements vscode.TreeDataProvider<PromptTreeItem> {
         return this.prompts;
     }
 
-    async addPrompt(title: string, content: string) {
-        await this.addPromptWithOption(title, content, false);
+    async addPrompt(title: string, content: string, titleSource?: 'user' | 'ai') {
+        await this.addPromptWithOption(title, content, false, titleSource);
     }
 
     // 重構 addPrompt 以支援 silent 模式
-    async addPromptWithOption(title: string, content: string, silent: boolean = false): Promise<void> {
+    async addPromptWithOption(
+        title: string,
+        content: string,
+        silent: boolean = false,
+        titleSource?: 'user' | 'ai'
+    ): Promise<void> {
         const today = getTodayISOString();
         const newId = generatePromptId(this.prompts);
         const newPrompt: Prompt = {
@@ -194,7 +201,8 @@ export class PromptProvider implements vscode.TreeDataProvider<PromptTreeItem> {
             use_count: 0,
             last_used: today,
             created_at: today,
-            pinned: false
+            pinned: false,
+            titleSource
         };
         this.prompts.push(newPrompt);
         await this.savePrompts();

@@ -36,6 +36,8 @@
     "message.clipboardItemPinned": "✅ Pinned to Prompts: {0}",
     "message.clipboardHistoryCleared": "🗑️ Clipboard history cleared",
     "message.clipboardItemRemoved": "🗑️ Removed from history",
-    "input.pinPromptTitle": "Enter title for this Prompt",
-    "confirm.clearClipboardHistory": "Clear all clipboard history?"
+    "input.pinPromptTitle": "Set title for this prompt",
+    "confirm.clearClipboardHistory": "Are you sure you want to clear all clipboard history?",
+    "confirm.clearModelCache": "Are you sure you want to delete the AI model cache? It will be re-downloaded next time.",
+    "message.modelCacheCleared": "AI model cache cleared successfully"
 }

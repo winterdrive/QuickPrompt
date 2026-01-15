@@ -90,9 +90,13 @@ QuickPrompt/
 │   ├── zh-tw.json        # Traditional Chinese messages
 │   └── zh-cn.json        # Simplified Chinese messages
 ├── src/                   # TypeScript source code
+│   ├── ai/                # AI engine module
+│   │   └── aiEngine.ts   # Local AI inference with Transformers.js
 │   ├── extension.ts       # Extension entry (activate/deactivate)
 │   ├── promptProvider.ts  # TreeDataProvider implementation
 │   ├── promptFileSystem.ts # Virtual file system for editing prompts
+│   ├── commands.ts        # Command handlers
+│   ├── clipboardManager.ts # Clipboard history tracking
 │   └── i18n.ts           # Internationalization utility
 ├── package.json           # Extension manifest
 ├── package.nls.json       # English localization (package.json)
@@ -111,6 +115,9 @@ QuickPrompt/
 | `extension.ts`          | Extension lifecycle management, command registration | `activate()`, `deactivate()` |
 | `promptProvider.ts`     | Implements `TreeDataProvider`, manages prompt data | `PromptProvider`, `PromptItem` |
 | `promptFileSystem.ts`   | Virtual file system for editing prompts in native VSCode editor | `PromptFileSystemProvider` |
+| `ai/aiEngine.ts`        | Local AI inference using Transformers.js and Qwen1.5-0.5B | `AIEngine` |
+| `commands.ts`           | Command handlers for prompt and clipboard operations | Various handler functions |
+| `clipboardManager.ts`   | Automatic clipboard history tracking | `ClipboardManager` |
 | `i18n.ts`               | Internationalization utility, loads language files | `I18n` |
 
 ### Core Data Flow
@@ -198,6 +205,8 @@ interface Prompt {
     last_used: string;    // Last used date (ISO format)
     created_at: string;   // Creation date (ISO format)
     pinned?: boolean;     // Whether pinned
+    order?: number;       // Manual sort order
+    titleSource?: 'user' | 'ai';  // Title origin (user-entered or AI-generated)
 }
 ```
 

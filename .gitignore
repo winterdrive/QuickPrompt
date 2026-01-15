@@ -9,3 +9,5 @@ SEO.md
 dist/**
 tools/**
 docs/specs/**
+.kiro/**
+package-lock.json

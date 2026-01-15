@@ -2,7 +2,7 @@
     "name": "quick-prompt",
     "displayName": "%extension.displayName%",
     "description": "%extension.description%",
-    "version": "0.0.7",
+    "version": "0.1.0",
     "publisher": "winterdrive",
     "icon": "docs/assets/quickprompt_icon_128.png",
     "license": "MIT",
@@ -81,6 +81,16 @@
                     "minimum": 1,
                     "maximum": 100,
                     "description": "Minimum content length (characters) to record"
+                },
+                "quickPrompt.ai.enabled": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable AI-powered features (auto title generation, tag suggestions)"
+                },
+                "quickPrompt.ai.autoGenerateTitle": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Automatically generate titles for new prompts using AI"
                 }
             }
         },
@@ -89,7 +99,7 @@
                 {
                     "id": "promptSniperContainer",
                     "title": "%view.container.title%",
-                    "icon": "assets/quickprompt_icon_gray.svg"
+                    "icon": "docs/assets/quickprompt_icon_gray.svg"
                 }
             ]
         },
@@ -122,6 +132,11 @@
             {
                 "command": "promptSniper.addPrompt",
                 "title": "%command.addPrompt.title%",
+                "icon": "$(add)"
+            },
+            {
+                "command": "promptSniper.addPromptWithTitle",
+                "title": "%command.addPromptWithTitle.title%",
                 "icon": "$(add)"
             },
             {
@@ -183,6 +198,12 @@
                 "command": "promptSniper.moveDown",
                 "title": "%command.moveDown.title%",
                 "icon": "$(arrow-down)"
+            },
+            {
+                "command": "promptSniper.clearModelCache",
+                "title": "%command.clearModelCache.title%",
+                "category": "Quick Prompt",
+                "icon": "$(trash)"
             }
         ],
         "keybindings": [
@@ -283,5 +304,8 @@
         "@types/node": "^16.x",
         "@types/vscode": "^1.75.0",
         "typescript": "^4.9.5"
+    },
+    "dependencies": {
+        "@xenova/transformers": "^2.17.2"
     }
 }

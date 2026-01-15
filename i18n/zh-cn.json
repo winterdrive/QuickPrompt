@@ -11,6 +11,7 @@
     "input.addPromptPlaceholder": "例如:请分析错误日志... 或 Debug::请分析错误日志...",
     "input.contentRequired": "内容不能为空",
     "confirm.deletePrompt": "确定要删除「{0}」吗?",
+    "confirm.cancel": "取消",
     "confirm.yes": "是",
     "confirm.no": "否",
     "icon.hot": "🔥",
@@ -37,5 +38,7 @@
     "message.clipboardHistoryCleared": "🗑️ 已清空剪贴板历史",
     "message.clipboardItemRemoved": "🗑️ 已从历史移除",
     "input.pinPromptTitle": "为此 Prompt 设置标题",
-    "confirm.clearClipboardHistory": "确定要清空所有剪贴板历史吗？"
+    "confirm.clearClipboardHistory": "确定要清空所有剪贴板历史吗？",
+    "confirm.clearModelCache": "确定要删除 AI 模型缓存吗？下次使用时将需要重新下载。",
+    "message.modelCacheCleared": "✅ 已清除 AI 模型缓存"
 }

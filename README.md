@@ -30,6 +30,7 @@ database of high-quality prompts for ChatGPT, Copilot, and Claude without switch
 
 ## ✨ Key Features
 
+- **🤖 AI-Powered Titles**: Automatic semantic title generation using local AI (Qwen1.5-0.5B)
 - **🎯 Lightning Fast Search**: Press `Alt+P` to search prompts and clipboard history, hit Enter to copy
 - **📋 Auto Clipboard History**: Automatically tracks your clipboard - never lose a good prompt again
 - **📊 Smart Tracking**: Tracks usage count and last used time to identify your golden prompts
@@ -182,6 +183,11 @@ Open VSCode Settings and search for "Quick Prompt":
 - `quickPrompt.clipboardHistory.minLength`: Minimum content length (default: `10`)
 - `quickPrompt.clipboardHistory.autoCleanDays`: Auto-clean after N days (default: `7`)
 
+#### AI Features
+
+- `quickPrompt.ai.enabled`: Enable/disable AI-powered features (default: `true`)
+- `quickPrompt.ai.autoGenerateTitle`: Automatically generate titles using AI (default: `true`)
+
 ### File Location
 
 - **Workspace Mode**: `.vscode/prompts.json` (independent per project)
@@ -245,7 +251,7 @@ The extension automatically uses your VSCode language setting.
 - **Manage Context**: Group related files across directories regardless of location.
 - **AI-Ready**: Create precise file sets to paste into your LLM context.
 
-[**Get VirtualTabs on VS Code Marketplace**](https://marketplace.visualstudio.com/items?itemName=winterdrive.virtual-tabs?utm_source=quickprompt&utm_medium=readme&utm_campaign=cross_promotion) | [**Open VSX Registry**](https://open-vsx.org/extension/winterdrive/virtual-tabs?utm_source=quickprompt&utm_medium=readme&utm_campaign=cross_promotion)
+Get VirtualTabs on [**VS Code Marketplace**](https://marketplace.visualstudio.com/items?itemName=winterdrive.virtual-tabs?utm_source=quickprompt&utm_medium=readme&utm_campaign=cross_promotion) | [**Open VSX Registry**](https://open-vsx.org/extension/winterdrive/virtual-tabs?utm_source=quickprompt&utm_medium=readme&utm_campaign=cross_promotion)
 
 ---
 

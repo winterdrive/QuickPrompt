@@ -7,6 +7,7 @@ tools/**
 # 開發設定
 .vscode/**
 .idea/**
+.kiro/**
 .gitignore
 .git/**
 
@@ -27,7 +28,6 @@ PUBLISH_CHECKLIST.md
 docs/specs/**
 docs/index.html
 docs/robots.txt
-llms.txt
 
 # 保留以下檔案（會被打包）：
 # - README.md (英文版，Marketplace 主要顯示)

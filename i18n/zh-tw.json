@@ -37,5 +37,7 @@
     "message.clipboardHistoryCleared": "🗑️ 已清空剪貼簿歷史",
     "message.clipboardItemRemoved": "🗑️ 已從歷史移除",
     "input.pinPromptTitle": "為此 Prompt 設定標題",
-    "confirm.clearClipboardHistory": "確定要清空所有剪貼簿歷史嗎？"
+    "confirm.clearClipboardHistory": "確定要清空所有剪貼簿歷史嗎？",
+    "confirm.clearModelCache": "確定要刪除 AI 模型快取嗎？下次使用時將需要重新下載。",
+    "message.modelCacheCleared": "✅ 已清除 AI 模型快取"
 }

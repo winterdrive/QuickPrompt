@@ -1,8 +1,28 @@
 # Quick Prompt Changelog
 
-> **[繁體中文](CHANGELOG.zh-TW.md)** | English
-
 All notable changes to the "Quick Prompt" extension will be documented in this file.
+
+---
+
+## [0.1.0] - 2026-01-16
+
+### ✨ New Features
+
+**AI-Powered Title Generation**
+
+- Automatically generates smart titles for your prompts using local AI (Qwen1.5-0.5B)
+- Works with `Alt+Shift+S` quick add and clipboard pinning
+- Privacy-first: all processing runs on your machine, no internet required
+- First-time download: ~300MB model (cached for future use)
+
+**Configuration**
+
+- `quickPrompt.ai.enabled` - Enable/disable AI features (default: true)
+- `quickPrompt.ai.autoGenerateTitle` - Auto-generate titles (default: true)
+
+### 🗑️ Removed
+
+- AI tag suggestion system (simplified to focus on title generation)
 
 ---
 

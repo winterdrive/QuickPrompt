@@ -6,10 +6,18 @@ import { ClipboardManager } from './clipboardManager';
 import { PromptHoverProvider } from './promptHoverProvider';
 import { I18n } from './i18n';
 import { registerPromptCommands, registerClipboardCommands } from './commands';
+import { AIEngine } from './ai/aiEngine';
 
 export async function activate(context: vscode.ExtensionContext) {
     // Initialize i18n
     await I18n.initialize(context);
+
+    // Initialize AI engine (lazy loading - won't block startup)
+    const aiEngine = AIEngine.getInstance();
+    // Don't await - let it initialize in background
+    aiEngine.initialize().catch(err => {
+        console.error('[Extension] AI Engine initialization failed:', err);
+    });
 
     // Initialize providers
     const { promptProvider, clipboardManager, clipboardProvider } = initializeProviders(context);
@@ -23,12 +31,12 @@ export async function activate(context: vscode.ExtensionContext) {
     // Initialize status bar
     initializeStatusBar(context, clipboardManager);
 
-    // Register all commands
-    registerPromptCommands(context, promptProvider, clipboardManager, fileSystemProvider);
-    registerClipboardCommands(context, promptProvider, clipboardManager, fileSystemProvider);
+    // Register all commands (pass aiEngine)
+    registerPromptCommands(context, promptProvider, clipboardManager, fileSystemProvider, aiEngine);
+    registerClipboardCommands(context, promptProvider, clipboardManager, fileSystemProvider, aiEngine);
 
     // Setup cleanup
-    setupCleanup(context, clipboardManager);
+    setupCleanup(context, clipboardManager, aiEngine);
 
     // 強制刷新 PromptProvider，確保非同步載入的 prompts 正確顯示
     // 這是因為 PromptProvider 構造函數中的 loadPrompts() 是非同步的，
@@ -167,11 +175,13 @@ function initializeStatusBar(
  */
 function setupCleanup(
     context: vscode.ExtensionContext,
-    clipboardManager: ClipboardManager
+    clipboardManager: ClipboardManager,
+    aiEngine: AIEngine
 ): void {
     context.subscriptions.push({
         dispose: () => {
             clipboardManager.dispose();
+            aiEngine.dispose();
         }
     });
 }
