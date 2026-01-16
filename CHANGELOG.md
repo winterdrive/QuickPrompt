@@ -4,6 +4,17 @@ All notable changes to the "Quick Prompt" extension will be documented in this f
 
 ---
 
+## [0.1.1] - 2026-01-16
+
+### ⚡ Performance & UX Improvements
+
+- **Progressive Title Generation**: Prompts are now added immediately with a fallback title, while AI generates a better title in the background.
+- **Non-blocking UI**: Solved the issue where AI generation would freeze the VSCode interface.
+- **Silent Mode**: Pinned and auto-added prompts now work silently without interrupting your flow.
+- **Reversible Updates**: When AI updates a title, a notification allows you to revert to the original if preferred.
+
+---
+
 ## [0.1.0] - 2026-01-16
 
 ### ✨ New Features

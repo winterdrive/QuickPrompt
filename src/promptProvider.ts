@@ -254,6 +254,15 @@ export class PromptProvider implements vscode.TreeDataProvider<PromptTreeItem> {
         }
     }
 
+    async updatePromptTitle(id: string, title: string): Promise<void> {
+        const prompt = this.prompts.find(p => p.id === id);
+        if (prompt) {
+            prompt.title = title;
+            await this.savePrompts();
+            await this.refresh();
+        }
+    }
+
     // 上移 Prompt
     async moveUp(item: PromptItem): Promise<void> {
         const index = this.prompts.findIndex(p => p.id === item.prompt.id);

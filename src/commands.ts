@@ -6,6 +6,7 @@ import { PromptFileSystemProvider } from './promptFileSystem';
 import { I18n } from './i18n';
 import { getPromptQuickPickIcon, sortPrompts, generateAutoTitle, getRelativeTime } from './utils';
 import { AIEngine } from './ai/aiEngine';
+import { TitleGenerationService } from './services/titleGenerationService';
 
 /**
  * Register all prompt-related commands
@@ -17,6 +18,9 @@ export function registerPromptCommands(
     fileSystemProvider: PromptFileSystemProvider,
     aiEngine: AIEngine
 ): void {
+    // 初始化標題生成服務
+    const titleGenService = new TitleGenerationService(aiEngine);
+
     // 搜尋 Prompt（整合剪貼簿歷史）
     context.subscriptions.push(
         vscode.commands.registerCommand('promptSniper.search', async () => {
@@ -34,21 +38,21 @@ export function registerPromptCommands(
     // 新增 Prompt - 智慧模式（支援 "標題::內容" 語法）
     context.subscriptions.push(
         vscode.commands.registerCommand('promptSniper.addPrompt', async () => {
-            await handleAddPrompt(promptProvider);
+            await handleAddPrompt(promptProvider, titleGenService);
         })
     );
 
     // 新增 Prompt - 自訂標題模式
     context.subscriptions.push(
         vscode.commands.registerCommand('promptSniper.addPromptWithTitle', async () => {
-            await handleAddPromptWithTitle(promptProvider, aiEngine);
+            await handleAddPromptWithTitle(promptProvider, titleGenService);
         })
     );
 
     // 新增 Prompt - Silent Capture (無干擾捕捉)
     context.subscriptions.push(
         vscode.commands.registerCommand('promptSniper.silentAdd', async () => {
-            await handleSilentAdd(promptProvider, aiEngine);
+            await handleSilentAdd(promptProvider, titleGenService);
         })
     );
 
@@ -104,7 +108,8 @@ export function registerClipboardCommands(
     promptProvider: PromptProvider,
     clipboardManager: ClipboardManager,
     fileSystemProvider: PromptFileSystemProvider,
-    aiEngine: AIEngine
+    aiEngine: AIEngine,
+    titleGenService: TitleGenerationService
 ): void {
     // 複製剪貼簿歷史項目
     context.subscriptions.push(
@@ -116,7 +121,7 @@ export function registerClipboardCommands(
     // 固定剪貼簿項目到 Prompts（無需輸入標題，靜默模式）
     context.subscriptions.push(
         vscode.commands.registerCommand('promptSniper.pinClipboardItem', async (item: ClipboardTreeItem) => {
-            await handlePinClipboardItem(item, promptProvider, clipboardManager, aiEngine);
+            await handlePinClipboardItem(item, promptProvider, clipboardManager, titleGenService);
         })
     );
 
@@ -241,9 +246,14 @@ async function handleInsertPrompt(item: PromptItem, promptProvider: PromptProvid
 }
 
 /**
- * Handle add prompt command with smart parsing
+ * Handle add prompt command (漸進式版本)
+ * 支援 "標題::內容" 語法，但優先使用漸進式 AI 生成
  */
-async function handleAddPrompt(promptProvider: PromptProvider): Promise<void> {
+async function handleAddPrompt(
+    promptProvider: PromptProvider,
+    titleGenService: TitleGenerationService
+): Promise<void> {
+    // 1. 輸入內容
     const input = await vscode.window.showInputBox({
         prompt: I18n.getMessage('input.addPromptPrompt'),
         placeHolder: I18n.getMessage('input.addPromptPlaceholder'),
@@ -259,62 +269,95 @@ async function handleAddPrompt(promptProvider: PromptProvider): Promise<void> {
         return;
     }
 
-    // 智慧解析：支援 "標題::內容" 格式
-    let title: string, content: string;
+    // 2. 智慧解析：支援 "標題::內容" 格式
+    let title: string = '';
+    let content: string;
+    let userProvidedTitle = false;
+
     if (input.includes('::')) {
         const parts = input.split('::', 2);
-        title = parts[0].trim();
+        const parsedTitle = parts[0].trim();
         content = parts[1].trim();
 
-        // 如果標題為空，使用自動生成
-        if (!title) {
-            title = generateAutoTitle(content);
+        if (parsedTitle) {
+            // 使用者提供了標題，直接使用
+            title = parsedTitle;
+            userProvidedTitle = true;
+        } else {
+            // 標題為空，使用漸進式生成
+            userProvidedTitle = false;
         }
     } else {
         content = input;
-        // 自動生成標題
-        title = generateAutoTitle(input);
+        userProvidedTitle = false;
     }
 
-    await promptProvider.addPrompt(title, content);
-}
+    // 3. 如果使用者已提供標題，直接儲存
+    if (userProvidedTitle) {
+        await promptProvider.addPrompt(title, content, 'user');
+        return;
+    }
 
-/**
- * Handle add prompt with custom title command
- */
-async function handleAddPromptWithTitle(promptProvider: PromptProvider, aiEngine: AIEngine): Promise<void> {
-    // 1. 輸入內容
-    const content = await vscode.window.showInputBox({
-        prompt: I18n.getMessage('input.addPromptPrompt'),
-        placeHolder: I18n.getMessage('input.addPromptPlaceholder'),
-        validateInput: (value) => {
-            if (!value || value.trim().length === 0) {
-                return I18n.getMessage('input.contentRequired');
+    // 4. Silent 模式: 立即生成 Fallback 標題並儲存 (不等待 AI)
+    const fallbackTitle = generateAutoTitle(content);
+    const promptId = await promptProvider.addPromptWithOption(
+        fallbackTitle,
+        content,
+        true,  // silent=true,不顯示儲存通知
+        'ai'
+    );
+
+    // 5. 顯示狀態列訊息
+    vscode.window.setStatusBarMessage(
+        `✅ 已儲存: ${fallbackTitle}`,
+        3000
+    );
+
+    // 6. 背景 AI 生成優化標題 (不阻塞)
+    titleGenService.generateProgressively(
+        content,
+        async (aiTitle, fallbackTitleFromAI) => {
+            // AI 完成後,更新 Prompt 標題
+            const prompts = promptProvider.getPrompts();
+            const prompt = prompts.find(p => p.content === content);
+
+            if (prompt && aiTitle !== fallbackTitle) {
+                // 更新標題
+                await promptProvider.updatePromptTitle(prompt.id, aiTitle);
+
+                // 顯示可撤銷通知
+                showPostSaveNotification(
+                    aiTitle,
+                    fallbackTitle,
+                    prompt.id,
+                    promptProvider
+                );
             }
-            return null;
         }
-    });
-
-    if (!content) return;
-
-    // 2. 輸入標題
-    const title = await vscode.window.showInputBox({
-        prompt: I18n.getMessage('input.pinPromptTitle'),
-        placeHolder: generateAutoTitle(content),
-        value: generateAutoTitle(content)
-    });
-
-    if (title === undefined) return;
-
-    const finalTitle = title.trim() || generateAutoTitle(content);
-
-    await promptProvider.addPrompt(finalTitle, content, 'user');
+    );
 }
 
 /**
- * Handle silent add command
+ * Handle add prompt with custom title command (漸進式版本)
+ * 現在與 handleAddPrompt 行為一致，保留此命令以維持向後相容
  */
-async function handleSilentAdd(promptProvider: PromptProvider, aiEngine: AIEngine): Promise<void> {
+async function handleAddPromptWithTitle(
+    promptProvider: PromptProvider,
+    titleGenService: TitleGenerationService
+): Promise<void> {
+    // 直接呼叫 handleAddPrompt，行為完全一致
+    await handleAddPrompt(promptProvider, titleGenService);
+}
+
+/**
+ * Handle silent add command (完全靜默版本)
+ * 直接使用 AI 生成標題並儲存，不顯示輸入框
+ * 儲存後顯示可撤銷通知，讓使用者可以編輯或刪除
+ */
+async function handleSilentAdd(
+    promptProvider: PromptProvider,
+    titleGenService: TitleGenerationService
+): Promise<void> {
     const editor = vscode.window.activeTextEditor;
     if (!editor) {
         vscode.window.showWarningMessage(I18n.getMessage('message.pleaseSelectText'));
@@ -327,30 +370,79 @@ async function handleSilentAdd(promptProvider: PromptProvider, aiEngine: AIEngin
         return;
     }
 
-    // 嘗試使用 AI 生成標題,如果 AI 不可用則使用預設策略
-    let autoTitle: string = '';
-    const config = vscode.workspace.getConfiguration('quickPrompt.ai');
-    const useAI = config.get<boolean>('autoGenerateTitle', true) && aiEngine.isReady();
+    // 1. 立即生成 Fallback 標題並儲存 (不等待 AI)
+    const fallbackTitle = generateAutoTitle(selection);
+    const promptId = await promptProvider.addPromptWithOption(
+        fallbackTitle,
+        selection,
+        true,  // silent=true，不顯示儲存通知
+        'ai'
+    );
 
-    if (useAI) {
-        try {
-            // 顯示狀態列動畫
-            await vscode.window.withProgress({
-                location: vscode.ProgressLocation.Window,
-                title: I18n.getMessage('status.generatingTitle')
-            }, async () => {
-                autoTitle = await aiEngine.summarize(selection, 50);
-            });
-        } catch (error) {
-            console.error('[Commands] AI title generation failed:', error);
-            autoTitle = generateAutoTitle(selection);
+    // 2. 顯示狀態列訊息
+    vscode.window.setStatusBarMessage(
+        `✅ 已儲存: ${fallbackTitle}`,
+        3000
+    );
+
+    // 3. 背景 AI 生成優化標題 (不阻塞)
+    titleGenService.generateProgressively(
+        selection,
+        async (aiTitle, fallbackTitleFromAI) => {
+            // AI 完成後，更新 Prompt 標題
+            const prompts = promptProvider.getPrompts();
+            const prompt = prompts.find(p => p.content === selection);
+
+            if (prompt && aiTitle !== fallbackTitle) {
+                // 更新標題
+                await promptProvider.updatePromptTitle(prompt.id, aiTitle);
+
+                // 顯示可撤銷通知
+                showPostSaveNotification(
+                    aiTitle,
+                    fallbackTitle,
+                    prompt.id,
+                    promptProvider
+                );
+            }
         }
-    } else {
-        autoTitle = generateAutoTitle(selection);
-    }
+    );
+}
 
-    // 直接儲存，並顯示通知 (silent=false)
-    await promptProvider.addPromptWithOption(autoTitle, selection, false, useAI ? 'ai' : undefined);
+/**
+ * 顯示儲存後的可撤銷通知
+ */
+async function showPostSaveNotification(
+    aiTitle: string,
+    fallbackTitle: string,
+    promptId: string,
+    promptProvider: PromptProvider
+): Promise<void> {
+    const displayTitle = aiTitle.length > 30
+        ? aiTitle.substring(0, 30) + '...'
+        : aiTitle;
+
+    // 顯示狀態列訊息 (持續 15 秒)
+    const statusBarDisposable = vscode.window.setStatusBarMessage(
+        `✨ AI 已優化標題: "${displayTitle}"`,
+        15000
+    );
+
+    // 顯示通知
+    const choice = await vscode.window.showInformationMessage(
+        `✨ AI 已優化標題: "${displayTitle}"`,
+        { modal: false },
+        '保留修改',
+        '回復原標題'
+    );
+
+    statusBarDisposable.dispose();
+
+    if (choice === '回復原標題') {
+        await promptProvider.updatePromptTitle(promptId, fallbackTitle);
+        vscode.window.setStatusBarMessage(`✅ 已回復為: ${fallbackTitle}`, 3000);
+    }
+    // '保留修改' 或關閉通知都不需要額外動作
 }
 
 /**
@@ -382,52 +474,56 @@ async function handleCopyClipboardItem(item: ClipboardTreeItem): Promise<void> {
 }
 
 /**
- * Handle pin clipboard item command
+ * Handle pin clipboard item command (Silent 模式)
  */
 async function handlePinClipboardItem(
     item: ClipboardTreeItem,
     promptProvider: PromptProvider,
     clipboardManager: ClipboardManager,
-    aiEngine: AIEngine
+    titleGenService: TitleGenerationService
 ): Promise<void> {
     if (!item || !item.item) return;
 
-    // 嘗試使用 AI 生成標題
-    let aiTitle: string = '';
-    const config = vscode.workspace.getConfiguration('quickPrompt.ai');
-    const useAI = config.get<boolean>('autoGenerateTitle', true) && aiEngine.isReady();
+    // 1. 立即生成 Fallback 標題並儲存 (不等待 AI)
+    const fallbackTitle = generateAutoTitle(item.item.content);
+    const promptId = await promptProvider.addPromptWithOption(
+        fallbackTitle,
+        item.item.content,
+        true,  // silent=true,不顯示儲存通知
+        'ai'
+    );
 
-    if (useAI) {
-        try {
-            await vscode.window.withProgress({
-                location: vscode.ProgressLocation.Window,
-                title: I18n.getMessage('status.generatingTitle')
-            }, async () => {
-                aiTitle = await aiEngine.summarize(item.item.content, 50);
-            });
-        } catch (error) {
-            console.error('[Commands] AI title generation failed:', error);
-            aiTitle = generateAutoTitle(item.item.preview);
-        }
-    } else {
-        aiTitle = generateAutoTitle(item.item.preview);
-    }
-
-    // 彈出輸入框讓使用者確認或修改標題
-    const title = await vscode.window.showInputBox({
-        prompt: I18n.getMessage('input.pinPromptTitle'),
-        placeHolder: aiTitle,
-        value: aiTitle
-    });
-
-    if (title === undefined) return; // 使用者取消
-
-    const finalTitle = title.trim() || aiTitle;
-
-    // 使用 silent 模式，避免彈出重複的通知
-    await promptProvider.addPromptWithOption(finalTitle, item.item.content, true, useAI ? 'ai' : undefined);
+    // 2. 移除剪貼簿項目
     clipboardManager.removeFromHistory(item.item.id);
-    vscode.window.setStatusBarMessage(`✅ 已固定: ${finalTitle}`, 2000);
+
+    // 3. 顯示狀態列訊息
+    vscode.window.setStatusBarMessage(
+        `✅ 已固定: ${fallbackTitle}`,
+        3000
+    );
+
+    // 4. 背景 AI 生成優化標題 (不阻塞)
+    titleGenService.generateProgressively(
+        item.item.content,
+        async (aiTitle, fallbackTitleFromAI) => {
+            // AI 完成後,更新 Prompt 標題
+            const prompts = promptProvider.getPrompts();
+            const prompt = prompts.find(p => p.content === item.item.content);
+
+            if (prompt && aiTitle !== fallbackTitle) {
+                // 更新標題
+                await promptProvider.updatePromptTitle(prompt.id, aiTitle);
+
+                // 顯示可撤銷通知
+                showPostSaveNotification(
+                    aiTitle,
+                    fallbackTitle,
+                    prompt.id,
+                    promptProvider
+                );
+            }
+        }
+    );
 }
 
 /**

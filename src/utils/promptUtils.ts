@@ -94,15 +94,39 @@ export function generatePreview(content: string, maxLength: number = PROMPT_CONS
 }
 
 /**
- * Generate an auto title from content
+ * Generate an auto title from content (Smart Fallback)
+ * 智慧 Fallback - 改進版標題生成
  * @param content The full content
  * @returns Auto-generated title
  */
 export function generateAutoTitle(content: string): string {
-    return content
-        .replace(/[\r\n]+/g, ' ')
-        .substring(0, PROMPT_CONSTANTS.AUTO_TITLE_MAX_LENGTH)
+    // 1. 清理內容
+    let cleaned = content
+        .replace(/```[\w]*\s*/g, '')  // 移除程式碼區塊標記
+        .replace(/[#*`\[\]]/g, '')    // 移除 Markdown 符號 (保留括號以免影響程式碼)
+        .replace(/[\r\n]+/g, ' ')     // 合併換行
         .trim();
+
+    // 2. 偵測並取第一句
+    const sentences = cleaned.match(/[^.!?。!?]+[.!?。!?]*/g) || [];
+    const firstSentence = sentences[0]?.trim() || cleaned;
+
+    // 3. 智慧截斷 (避免斷字)
+    const maxLength = PROMPT_CONSTANTS.AUTO_TITLE_MAX_LENGTH;
+    if (firstSentence.length <= maxLength) {
+        return firstSentence;
+    }
+
+    // 在空白處截斷
+    const truncated = firstSentence.substring(0, maxLength);
+    const lastSpace = truncated.lastIndexOf(' ');
+
+    // 如果最後一個空白位置在 70% 之後，就在那裡截斷
+    if (lastSpace > maxLength * 0.7) {
+        return truncated.substring(0, lastSpace) + '...';
+    }
+
+    return truncated + '...';
 }
 
 /**

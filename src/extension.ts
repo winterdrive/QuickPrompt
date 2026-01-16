@@ -7,6 +7,7 @@ import { PromptHoverProvider } from './promptHoverProvider';
 import { I18n } from './i18n';
 import { registerPromptCommands, registerClipboardCommands } from './commands';
 import { AIEngine } from './ai/aiEngine';
+import { TitleGenerationService } from './services/titleGenerationService';
 
 export async function activate(context: vscode.ExtensionContext) {
     // Initialize i18n
@@ -31,9 +32,13 @@ export async function activate(context: vscode.ExtensionContext) {
     // Initialize status bar
     initializeStatusBar(context, clipboardManager);
 
-    // Register all commands (pass aiEngine)
+    // Initialize title generation services
+    const titleGenService = new TitleGenerationService(aiEngine);
+
+
+    // Register all commands (pass aiEngine and title services)
     registerPromptCommands(context, promptProvider, clipboardManager, fileSystemProvider, aiEngine);
-    registerClipboardCommands(context, promptProvider, clipboardManager, fileSystemProvider, aiEngine);
+    registerClipboardCommands(context, promptProvider, clipboardManager, fileSystemProvider, aiEngine, titleGenService);
 
     // Setup cleanup
     setupCleanup(context, clipboardManager, aiEngine);
