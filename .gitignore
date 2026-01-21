@@ -11,3 +11,5 @@ tools/**
 docs/specs/**
 .kiro/**
 package-lock.json
+docs/ref/**
+docs/assets/deprecated/**

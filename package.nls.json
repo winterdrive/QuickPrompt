@@ -20,5 +20,12 @@
     "command.clearClipboardHistory.title": "Clear Clipboard History",
     "command.moveUp.title": "Move Up",
     "command.moveDown.title": "Move Down",
-    "command.clearModelCache.title": "Clear AI Model Cache"
+    "command.clearModelCache.title": "Clear AI Model Cache",
+    "command.showVersionDiff.title": "Compare with Current Version",
+    "command.applyVersion.title": "Apply Version",
+    "command.tagMilestone.title": "Tag as Milestone",
+    "command.renameMilestone.title": "Rename Milestone",
+    "command.removeMilestone.title": "Remove Milestone Tag",
+    "command.deleteVersion.title": "Delete Version",
+    "command.copyVersionContent.title": "Copy Version Content"
 }

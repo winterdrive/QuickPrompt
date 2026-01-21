@@ -4,6 +4,28 @@ All notable changes to the "Quick Prompt" extension will be documented in this f
 
 ---
 
+## [0.2.0] - 2026-01-21
+
+### ✨ New Features
+
+**Version History System**
+
+- **Linear History**: Automatically tracks every change to your prompts
+- **Soft Checkout**: Apply historical versions without overwriting until you save (with dirty check safety)
+- **Milestones**: Tag important versions (e.g., "Stable", "Draft v2")
+- **Diff View**: Compare any historical version with the current state with one click
+- **Smart Retention**: Automatically prunes old versions for storage efficiency (keeps last 15 versions + milestones + restores)
+- **Internationalization**: Full support for English, Traditional Chinese, and Simplified Chinese
+
+### 🔧 Improvements
+
+- **Security**: Added path traversal protection for prompt history files
+- **Reliability**: Improved resource cleanup for AI engine
+- **Consistency**: Unified command naming conventions across the extension
+- **Performance**: Optimized partial updates for history tree view
+
+---
+
 ## [0.1.1] - 2026-01-16
 
 ### ⚡ Performance & UX Improvements

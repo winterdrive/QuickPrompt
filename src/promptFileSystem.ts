@@ -70,7 +70,20 @@ export class PromptFileSystemProvider implements vscode.FileSystemProvider {
     }
 
     stat(uri: vscode.Uri): vscode.FileStat {
-        const content = this.fileCache.get(uri.path);
+        let content = this.fileCache.get(uri.path);
+
+        // 如果快取沒有命中，嘗試即時從 Provider 獲取
+        if (!content && this.getPromptsCallback) {
+            const promptId = this.getPromptIdFromUri(uri);
+            const prompts = this.getPromptsCallback();
+            const prompt = prompts.find(p => p.id === promptId);
+
+            if (prompt) {
+                // 更新快取
+                content = new TextEncoder().encode(prompt.content);
+                this.fileCache.set(uri.path, content);
+            }
+        }
 
         if (!content) {
             throw vscode.FileSystemError.FileNotFound(uri);
@@ -94,7 +107,20 @@ export class PromptFileSystemProvider implements vscode.FileSystemProvider {
     }
 
     readFile(uri: vscode.Uri): Uint8Array {
-        const content = this.fileCache.get(uri.path);
+        let content = this.fileCache.get(uri.path);
+
+        // 如果快取沒有命中，嘗試即時從 Provider 獲取
+        if (!content && this.getPromptsCallback) {
+            const promptId = this.getPromptIdFromUri(uri);
+            const prompts = this.getPromptsCallback();
+            const prompt = prompts.find(p => p.id === promptId);
+
+            if (prompt) {
+                // 更新快取
+                content = new TextEncoder().encode(prompt.content);
+                this.fileCache.set(uri.path, content);
+            }
+        }
 
         if (!content) {
             throw vscode.FileSystemError.FileNotFound(uri);

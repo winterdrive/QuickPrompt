@@ -66,7 +66,12 @@ export function comparePrompts(a: Prompt, b: Prompt): number {
         return a.pinned ? -1 : 1;
     }
 
-    // Then sort by last used date (newest first)
+    // Then sort by explicit order (if both have it)
+    if (a.order !== undefined && b.order !== undefined && a.order !== b.order) {
+        return a.order - b.order;
+    }
+
+    // Finally sort by last used date (newest first)
     return new Date(b.last_used).getTime() - new Date(a.last_used).getTime();
 }
 

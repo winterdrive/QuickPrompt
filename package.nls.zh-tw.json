@@ -20,5 +20,12 @@
     "command.clearClipboardHistory.title": "清空剪貼簿歷史",
     "command.moveUp.title": "上移",
     "command.moveDown.title": "下移",
-    "command.clearModelCache.title": "清除 AI 模型快取"
+    "command.clearModelCache.title": "清除 AI 模型快取",
+    "command.showVersionDiff.title": "與目前版本比較",
+    "command.applyVersion.title": "套用版本",
+    "command.tagMilestone.title": "標記為里程碑",
+    "command.renameMilestone.title": "重新命名里程碑",
+    "command.removeMilestone.title": "移除里程碑標籤",
+    "command.deleteVersion.title": "刪除版本",
+    "command.copyVersionContent.title": "複製版本內容"
 }

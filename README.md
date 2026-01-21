@@ -6,52 +6,57 @@
 
 [繁體中文](./README.zh-TW.md) | [English](./README.md)
 
-![Quick Prompt - VS Code AI Prompt Manager & Clipboard History Interface](docs/assets/vscode-quick-prompt-extension-banner.png)
+![Quick Prompt - VS Code AI Prompt Manager & Clipboard History Interface](docs/assets/hero_banner.png)
+
+---
+
+## 🔥 New in v0.2.0: Version History System
+
+**Never lose a prompt iteration again.** The new Version History System automatically tracks every change you make.
+
+![Version History Demo](docs/assets/version_history_demo.png)
+
+### Core Features
+
+- **🕒 Linear History**: Automatic tracking of every save.
+- **📌 Milestones**: Tag stable versions or important drafts.
+- **↩️ Soft Checkout**: Restore old versions safely without overwriting immediately.
+
+### ⚖️ Visual Diff View
+
+One-click comparison between history and current state. Use the Diff View to verify changes before restoring.
+
+![Diff View Demo](docs/assets/diff_view_demo.png)
 
 ---
 
 ## 🚀 What is Quick Prompt?
 
-**Quick Prompt is a VS Code extension that helps developers manage, organize, and instantly access AI prompts and
-clipboard history.** It combines a **prompt library** with **clipboard tracking**, allowing you to build a personalized
-database of high-quality prompts for ChatGPT, Copilot, and Claude without switching context.
-
----
-
-### ⚡ Why use Quick Prompt?
-
-| Feature          | Native Clipboard | Quick Prompt Extension                    |
-|:-----------------|:-----------------|:------------------------------------------|
-| **History**      | Limited/None     | **Automatic History Tracking**            |
-| **Organization** | None             | **Custom Prompt Library** (Saved to JSON) |
-| **Access**       | Ctrl+V only      | **Searchable Interface** (Alt+P)          |
-
----
+**Quick Prompt is a VS Code extension that helps developers manage, organize, and instantly access AI prompts and clipboard history.** It combines a **prompt library** with **clipboard tracking**, allowing you to build a personalized database of high-quality prompts for ChatGPT, Copilot, and Claude without switching context.
 
 ## ✨ Key Features
 
-- **🤖 AI-Powered Titles**: Automatic semantic title generation using local AI (Qwen1.5-0.5B)
-- **🎯 Lightning Fast Search**: Press `Alt+P` to search prompts and clipboard history, hit Enter to copy
-- **📋 Auto Clipboard History**: Automatically tracks your clipboard - never lose a good prompt again
-- **📊 Smart Tracking**: Tracks usage count and last used time to identify your golden prompts
-- **🚀 Quick Add**: Right-click selected text → "Quick Add Prompt" (or press `Alt+Shift+S`)
-- **🎨 Visual Interface**: Sidebar displays popularity with icons (🔥/⭐/📝)
-- **📁 Project Isolation**: Each workspace has its own independent prompt collection
-- **⬆️⬇️ Manual Sorting**: Right-click to move prompts up or down
-- **✏️ Native Editing**: Edit prompts like regular files with full VSCode support
+### 📚 Prompt Management
+
+- **🤖 AI-Powered Titles**: Automatic semantic title generation using local AI (Qwen1.5-0.5B).
+- **🎯 Lightning Fast Search**: Press `Alt+P` to search prompts, hit Enter to copy.
+- **🚀 Quick Add**: Right-click selected text → "Quick Add Prompt" (or press `Alt+Shift+S`).
+- **🎨 Visual Interface**: Sidebar displays popularity with icons (🔥/⭐/📝).
+- **✏️ Native Editing**: Edit prompts like regular files with full VSCode support.
+
+### 🕒 Version Control (New!)
+
+- **Track Everything**: Every change is recorded.
+- **Smart Retention**: Keeps history clean by pruning intermediate edits while preserving milestones.
+- **Diff Comparison**: Visually check what changed.
+
+### 📋 Clipboard History
+
+- **Auto Capture**: Never lose copied text. Tracks VSCode and external apps.
+- **Smart Tracking**: Usage counts and last used times help identify golden prompts.
+- **Project Isolation**: Workspace-specific prompt collections.
 
 ![Feature Highlights](docs/assets/feature_highlights_v0003.png)
-
-<details>
-<summary>📖 View Previous Version (Basic UI Reference)</summary>
-
-### Feature Highlights (Previous Version)
-
-![Feature Highlights - Previous](docs/assets/feature_highlights.png)
-
-*These images show the basic interface and core functionality that remains available in the current version.*
-
-</details>
 
 ## 📸 Screenshots (AI Generated)
 
@@ -141,6 +146,13 @@ database of high-quality prompts for ChatGPT, Copilot, and Claude without switch
 - **Pin**: Click **📌** to pin important prompts to the top
 - **Sort**: Right-click → Move Up/Down to manually arrange
 - **Delete**: Click **🗑️** to remove (no confirmation needed)
+
+### Using Version History (New)
+
+1. **View History**: Expand any prompt in the sidebar.
+2. **Compare**: Click on any historical version to open the **Diff View**.
+3. **Restore**: Right-click a version and select **Apply Version** to bring it back.
+4. **Milestones**: Tag important versions (like "V1.0 Stable") to keep them safe forever.
 
 ## 📋 Clipboard History
 

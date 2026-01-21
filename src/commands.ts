@@ -7,6 +7,9 @@ import { I18n } from './i18n';
 import { getPromptQuickPickIcon, sortPrompts, generateAutoTitle, getRelativeTime } from './utils';
 import { AIEngine } from './ai/aiEngine';
 import { TitleGenerationService } from './services/titleGenerationService';
+import { VersionHistoryService } from './services/VersionHistoryService';
+import { VersionItem } from './treeItems/VersionItem';
+import * as versionCommands from './commands/versionCommands';
 
 /**
  * Register all prompt-related commands
@@ -150,6 +153,64 @@ export function registerClipboardCommands(
     context.subscriptions.push(
         vscode.commands.registerCommand('promptSniper.clearModelCache', async () => {
             await handleClearModelCache(aiEngine);
+        })
+    );
+}
+
+/**
+ * Register all version history commands
+ */
+export function registerVersionCommands(
+    context: vscode.ExtensionContext,
+    promptProvider: PromptProvider,
+    versionHistoryService: VersionHistoryService
+): void {
+    // Show version diff
+    context.subscriptions.push(
+        vscode.commands.registerCommand('promptSniper.showVersionDiff', async (item: VersionItem) => {
+            await versionCommands.handleShowVersionDiff(item, versionHistoryService);
+        })
+    );
+
+    // Apply Version Command (Soft Checkout)
+    context.subscriptions.push(
+        vscode.commands.registerCommand('promptSniper.applyVersion', (item: VersionItem) => {
+            versionCommands.handleApplyVersion(item, promptProvider);
+        })
+    );
+
+    // Tag milestone
+    context.subscriptions.push(
+        vscode.commands.registerCommand('promptSniper.tagMilestone', async (item: VersionItem) => {
+            await versionCommands.handleTagMilestone(item, versionHistoryService, promptProvider);
+        })
+    );
+
+    // Rename milestone
+    context.subscriptions.push(
+        vscode.commands.registerCommand('promptSniper.renameMilestone', async (item: VersionItem) => {
+            await versionCommands.handleRenameMilestone(item, versionHistoryService, promptProvider);
+        })
+    );
+
+    // Remove milestone
+    context.subscriptions.push(
+        vscode.commands.registerCommand('promptSniper.removeMilestone', async (item: VersionItem) => {
+            await versionCommands.handleRemoveMilestone(item, versionHistoryService, promptProvider);
+        })
+    );
+
+    // Delete version
+    context.subscriptions.push(
+        vscode.commands.registerCommand('promptSniper.deleteVersion', async (item: VersionItem) => {
+            await versionCommands.handleDeleteVersion(item, versionHistoryService, promptProvider);
+        })
+    );
+
+    // Copy version content
+    context.subscriptions.push(
+        vscode.commands.registerCommand('promptSniper.copyVersionContent', async (item: VersionItem) => {
+            await versionCommands.handleCopyVersionContent(item);
         })
     );
 }
@@ -449,13 +510,15 @@ async function showPostSaveNotification(
  * Handle edit prompt command
  */
 async function handleEditPrompt(
-    item: PromptItem,
+    item: PromptItem | VersionItem | any,
     fileSystemProvider: PromptFileSystemProvider
 ): Promise<void> {
-    if (!item || !item.prompt) return;
+    // 支援 PromptItem, VersionItem 或任何帶有 promptId 的物件
+    const promptId = item?.prompt?.id || item?.promptId;
+    if (!promptId) return;
 
     // 使用虛擬檔案系統開啟 Prompt
-    const uri = fileSystemProvider.getUriForPrompt(item.prompt.id);
+    const uri = fileSystemProvider.getUriForPrompt(promptId);
     const doc = await vscode.workspace.openTextDocument(uri);
     await vscode.window.showTextDocument(doc, {
         preview: false, // 不使用預覽模式，確保分頁不會被自動關閉

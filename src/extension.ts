@@ -5,10 +5,10 @@ import { PromptFileSystemProvider } from './promptFileSystem';
 import { ClipboardManager } from './clipboardManager';
 import { PromptHoverProvider } from './promptHoverProvider';
 import { I18n } from './i18n';
-import { registerPromptCommands, registerClipboardCommands } from './commands';
+import { registerPromptCommands, registerClipboardCommands, registerVersionCommands } from './commands';
 import { AIEngine } from './ai/aiEngine';
 import { TitleGenerationService } from './services/titleGenerationService';
-
+import { VersionHistoryService } from './services/VersionHistoryService';
 export async function activate(context: vscode.ExtensionContext) {
     // Initialize i18n
     await I18n.initialize(context);
@@ -16,12 +16,18 @@ export async function activate(context: vscode.ExtensionContext) {
     // Initialize AI engine (lazy loading - won't block startup)
     const aiEngine = AIEngine.getInstance();
     // Don't await - let it initialize in background
-    aiEngine.initialize().catch(err => {
+    aiEngine.initialize(context).catch(err => {
         console.error('[Extension] AI Engine initialization failed:', err);
     });
 
+    // Initialize version history service
+    const versionHistoryService = new VersionHistoryService(context);
+
     // Initialize providers
-    const { promptProvider, clipboardManager, clipboardProvider } = initializeProviders(context);
+    const { promptProvider, clipboardManager, clipboardProvider } = initializeProviders(context, versionHistoryService);
+
+    // Initialize version history for existing prompts (migration)
+    await initializeVersionHistory(promptProvider, versionHistoryService);
 
     // Initialize file system
     const fileSystemProvider = initializeFileSystem(context, promptProvider);
@@ -39,6 +45,7 @@ export async function activate(context: vscode.ExtensionContext) {
     // Register all commands (pass aiEngine and title services)
     registerPromptCommands(context, promptProvider, clipboardManager, fileSystemProvider, aiEngine);
     registerClipboardCommands(context, promptProvider, clipboardManager, fileSystemProvider, aiEngine, titleGenService);
+    registerVersionCommands(context, promptProvider, versionHistoryService);
 
     // Setup cleanup
     setupCleanup(context, clipboardManager, aiEngine);
@@ -56,9 +63,9 @@ export function deactivate() { }
 /**
  * Initialize core providers (PromptProvider, ClipboardProvider and ClipboardManager)
  */
-function initializeProviders(context: vscode.ExtensionContext) {
+function initializeProviders(context: vscode.ExtensionContext, versionHistoryService: VersionHistoryService) {
     // 初始化 PromptProvider
-    const promptProvider = new PromptProvider(context);
+    const promptProvider = new PromptProvider(context, versionHistoryService);
     vscode.window.registerTreeDataProvider('promptSniperView', promptProvider);
 
     // 初始化 ClipboardManager
@@ -190,3 +197,30 @@ function setupCleanup(
         }
     });
 }
+/**
+ * Initialize version history for existing prompts (one-time migration)
+ */
+async function initializeVersionHistory(
+    promptProvider: PromptProvider,
+    versionHistoryService: VersionHistoryService
+): Promise<void> {
+    try {
+        const prompts = promptProvider.getPrompts();
+
+        for (const prompt of prompts) {
+            const history = await versionHistoryService.loadHistory(prompt.id);
+
+            // If no version history exists, create initial version
+            if (history.versions.length === 0) {
+                await versionHistoryService.createVersion(prompt.id, {
+                    content: prompt.content,
+                    changeType: 'create'
+                });
+            }
+        }
+    } catch (error) {
+        console.error('Failed to initialize version history:', error);
+        // Don't block extension activation on version history initialization failure
+    }
+}
+

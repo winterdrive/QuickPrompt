@@ -1,6 +1,8 @@
 import * as vscode from 'vscode';
 import { I18n } from './i18n';
 import { ClipboardManager } from './clipboardManager';
+import { VersionHistoryService } from './services/VersionHistoryService';
+import { VersionItem } from './treeItems/VersionItem';
 import {
     getPromptIcon,
     sortPrompts,
@@ -22,10 +24,15 @@ export interface Prompt {
     pinned?: boolean;         // 是否釘選
     order?: number;           // 手動排序順序
     titleSource?: 'user' | 'ai';  // 標題來源
+    // 新增：元數據快取，避免讀取歷史檔案
+    meta?: {
+        totalVersions: number;
+        latestVersionId?: string;
+    };
 }
 
-// 基礎 TreeItem 類型 (PromptProvider 只處理 PromptItem)
-export type PromptTreeItem = PromptItem;
+// TreeItem 類型 (支援 PromptItem 和 VersionItem)
+export type PromptTreeItem = PromptItem | VersionItem;
 
 export class PromptProvider implements vscode.TreeDataProvider<PromptTreeItem> {
     private _onDidChangeTreeData: vscode.EventEmitter<PromptTreeItem | undefined | null | void> = new vscode.EventEmitter<PromptTreeItem | undefined | null | void>();
@@ -38,8 +45,14 @@ export class PromptProvider implements vscode.TreeDataProvider<PromptTreeItem> {
     private prompts: Prompt[] = [];
     private promptsFilePath: string;
     private clipboardManager?: ClipboardManager;
+    private versionHistoryService: VersionHistoryService;
 
-    constructor(private context: vscode.ExtensionContext) {
+    constructor(private context: vscode.ExtensionContext, versionHistoryService?: VersionHistoryService) {
+        // 初始化版本歷史服務 (使用傳入的實例，若無則建立新實例 - 但建議由外部傳入以保持單例)
+        this.versionHistoryService = versionHistoryService || new VersionHistoryService(context);
+        // 注入 PromptProvider 以便 VersionHistoryService 更新 Metadata
+        this.versionHistoryService.setPromptProvider(this);
+
         // 使用工作區路徑而非擴充功能路徑
         const workspaceFolders = vscode.workspace.workspaceFolders;
         if (workspaceFolders && workspaceFolders.length > 0) {
@@ -80,10 +93,28 @@ export class PromptProvider implements vscode.TreeDataProvider<PromptTreeItem> {
 
             // 自動遷移：移除舊欄位 (status)，補齊新欄位
             let needsMigration = false;
-            prompts = prompts.map((p: any) => {
+            let needsMetaUpdate = false;
+
+            // 平行處理所有 Prompts 的 Metadata 檢查
+            const processedPrompts = await Promise.all(prompts.map(async (p: any) => {
                 // 檢查是否有舊欄位
                 if ('status' in p) {
                     needsMigration = true;
+                }
+
+                // 檢查是否缺少 meta
+                if (!p.meta) {
+                    needsMetaUpdate = true;
+                    // 讀取歷史檔案以取得正確的版本資訊
+                    try {
+                        const history = await this.versionHistoryService.loadHistory(p.id);
+                        p.meta = {
+                            totalVersions: history.versions.length,
+                            latestVersionId: history.currentVersionId
+                        };
+                    } catch (e) {
+                        p.meta = { totalVersions: 0 };
+                    }
                 }
 
                 const today = getTodayISOString();
@@ -96,14 +127,16 @@ export class PromptProvider implements vscode.TreeDataProvider<PromptTreeItem> {
                     created_at: p.created_at || p.last_used || today,
                     pinned: p.pinned ?? false,
                     titleSource: p.titleSource,
-                    order: p.order
+                    order: p.order,
+                    meta: p.meta
                 };
-            });
+            }));
 
-            this.prompts = prompts;
+            this.prompts = processedPrompts;
 
             // 如果有遷移,自動儲存清理後的資料(靜默模式)
-            if (needsMigration) {
+            if (needsMigration || needsMetaUpdate) {
+                console.log('[PromptProvider] Doing migration or meta update...');
                 await this.savePrompts();
             }
         } catch (error: any) {
@@ -127,7 +160,8 @@ export class PromptProvider implements vscode.TreeDataProvider<PromptTreeItem> {
                 use_count: 0,
                 last_used: today,
                 created_at: today,
-                pinned: false
+                pinned: false,
+                meta: { totalVersions: 0 }
             }
         ];
 
@@ -154,15 +188,35 @@ export class PromptProvider implements vscode.TreeDataProvider<PromptTreeItem> {
         return element;
     }
 
-    getChildren(element?: PromptTreeItem): Thenable<PromptTreeItem[]> {
-        // 直接返回 Prompts 列表（不再使用分組）
+    async getChildren(element?: PromptTreeItem): Promise<PromptTreeItem[]> {
         if (!element) {
-            // 排序：Pinned 在前，然後按最後使用時間排序
+            // 返回 Prompts 列表
             const sorted = sortPrompts(this.prompts);
-            return Promise.resolve(sorted.map(p => new PromptItem(p)));
+
+            // 直接使用 p.meta.totalVersions，無需非同步讀取
+            return sorted.map(p => {
+                const totalVersions = p.meta?.totalVersions ?? 0;
+                return new PromptItem(p, totalVersions);
+            });
+        } else if (element instanceof PromptItem) {
+            // 返回版本歷史
+            return this.getVersionHistory(element.prompt.id);
         }
 
-        return Promise.resolve([]);
+        return [];
+    }
+
+    /**
+     * 更新 Prompt 的 Metadata (由 VersionHistoryService 呼叫)
+     */
+    async updatePromptMetadata(promptId: string, meta: { totalVersions: number; latestVersionId?: string }): Promise<void> {
+        const prompt = this.prompts.find(p => p.id === promptId);
+        if (prompt) {
+            prompt.meta = meta;
+            // 這裡不需要呼叫 refresh()，因為通常 VersionHistoryService 操作完後會觸發 refresh
+            // 但我們必須儲存 prompts.json
+            await this.savePrompts();
+        }
     }
 
     private async savePrompts(): Promise<void> {
@@ -245,12 +299,20 @@ export class PromptProvider implements vscode.TreeDataProvider<PromptTreeItem> {
         }
     }
 
-    async updatePromptContent(id: string, content: string): Promise<void> {
+    async updatePromptContent(id: string, content: string, skipVersionCreation: boolean = false): Promise<void> {
         const prompt = this.prompts.find(p => p.id === id);
         if (prompt) {
+            // Create new version before updating, unless skipped
+            if (!skipVersionCreation) {
+                await this.versionHistoryService.createVersion(id, {
+                    content: content,
+                    changeType: 'edit'
+                });
+            }
+
             prompt.content = content;
             await this.savePrompts();
-            await this.refresh(); // Optional: might not need full refresh if we just update content
+            await this.refresh();
         }
     }
 
@@ -294,28 +356,50 @@ export class PromptProvider implements vscode.TreeDataProvider<PromptTreeItem> {
             vscode.window.setStatusBarMessage(`✅ 已下移: ${item.prompt.title}`, 2000);
         }
     }
+
+    /**
+     * Get version history for a prompt as TreeItems
+     */
+    private async getVersionHistory(promptId: string): Promise<VersionItem[]> {
+        const history = await this.versionHistoryService.loadHistory(promptId);
+
+        return history.versions.map(version =>
+            new VersionItem(
+                promptId,
+                version,
+                version.versionId === history.currentVersionId
+            )
+        );
+    }
 }
 
 export class PromptItem extends vscode.TreeItem {
-    constructor(public readonly prompt: Prompt) {
-        super(prompt.title, vscode.TreeItemCollapsibleState.None);
+    constructor(
+        public readonly prompt: Prompt,
+        versionCount: number = 0
+    ) {
+        // Set collapsible state based on version count
+        super(
+            prompt.title,
+            versionCount > 0
+                ? vscode.TreeItemCollapsibleState.Collapsed
+                : vscode.TreeItemCollapsibleState.None
+        );
 
         // 計算相對時間
         const timeText = formatRelativeTime(prompt.last_used);
 
-        this.tooltip = `${prompt.content}\n\n${I18n.getMessage('status.useCount', prompt.use_count.toString())}\n${I18n.getMessage('status.lastUsed', timeText)}`;
-        this.description = I18n.getMessage('status.useCount', prompt.use_count.toString());
+        // Build description with use count and version count
+        const useCountText = I18n.getMessage('status.useCount', prompt.use_count.toString());
+        const versionCountText = versionCount > 0 ? ` • ${versionCount} 個版本` : '';
+        this.description = useCountText + versionCountText;
+
+        this.tooltip = `${prompt.content}\n\n${useCountText}${versionCountText}\n${I18n.getMessage('status.lastUsed', timeText)}`;
 
         // 根據使用次數設定圖示
         this.iconPath = getPromptIcon(prompt);
         this.contextValue = 'promptItem';
 
-        this.command = {
-            command: 'promptSniper.insert',
-            title: 'Copy Prompt',
-            arguments: [this]
-        };
+
     }
-
-
 }
