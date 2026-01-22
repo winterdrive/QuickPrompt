@@ -10,6 +10,12 @@
 
 ---
 
+## 🚀 What is Quick Prompt?
+
+**Quick Prompt is a VS Code extension that helps developers manage, organize, and instantly access AI prompts and clipboard history.** It combines a **prompt library** with **clipboard tracking**, allowing you to build a personalized database of high-quality prompts for ChatGPT, Copilot, and Claude without switching context.
+
+---
+
 ## 🔥 New in v0.2.0: Version History System
 
 **Never lose a prompt iteration again.** The new Version History System automatically tracks every change you make.
@@ -29,10 +35,6 @@ One-click comparison between history and current state. Use the Diff View to ver
 ![Diff View Demo](docs/assets/diff_view_demo.png)
 
 ---
-
-## 🚀 What is Quick Prompt?
-
-**Quick Prompt is a VS Code extension that helps developers manage, organize, and instantly access AI prompts and clipboard history.** It combines a **prompt library** with **clipboard tracking**, allowing you to build a personalized database of high-quality prompts for ChatGPT, Copilot, and Claude without switching context.
 
 ## ✨ Key Features
 
@@ -240,16 +242,6 @@ Open VSCode Settings and search for "Quick Prompt":
 - Standardize team communication with AI
 - Build a prompt library together
 
-## 🌐 Internationalization
-
-Quick Prompt supports multiple languages:
-
-- 🇺🇸 English
-- 🇹🇼 繁體中文 (Traditional Chinese)
-- 🇨🇳 简体中文 (Simplified Chinese)
-
-The extension automatically uses your VSCode language setting.
-
 ---
 
 ## 🤝 Recommended Companion
@@ -266,6 +258,12 @@ The extension automatically uses your VSCode language setting.
 Get VirtualTabs on [**VS Code Marketplace**](https://marketplace.visualstudio.com/items?itemName=winterdrive.virtual-tabs?utm_source=quickprompt&utm_medium=readme&utm_campaign=cross_promotion) | [**Open VSX Registry**](https://open-vsx.org/extension/winterdrive/virtual-tabs?utm_source=quickprompt&utm_medium=readme&utm_campaign=cross_promotion)
 
 ---
+
+## ❤️ Support
+
+If you find this extension helpful, please consider supporting the development!
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Q5Q41SR5WO)
 
 ## 📄 License
 

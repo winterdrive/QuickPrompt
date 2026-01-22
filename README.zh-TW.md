@@ -10,6 +10,13 @@
 
 ---
 
+## 🚀 什麼是 Quick Prompt？
+
+**Quick Prompt 是一個協助開發者管理、組織並即時存取 AI 提示詞與剪貼簿歷史的 VS Code 擴充功能。** 它結合了 **提示詞資料庫**
+與 **剪貼簿追蹤**，讓您無需切換視窗，即可為 ChatGPT、Copilot 和 Claude 建立高品質的個人化提示詞庫。
+
+---
+
 ## 🔥 v0.2.0 重大更新：版本歷史系統
 
 **不再遺失任何一次 Prompt 的迭代。** 全新的版本歷史系統會自動為您追蹤每一次變更。
@@ -29,11 +36,6 @@
 ![差異檢視示範](docs/assets/diff_view_demo.png)
 
 ---
-
-## 🚀 什麼是 Quick Prompt？
-
-**Quick Prompt 是一個協助開發者管理、組織並即時存取 AI 提示詞與剪貼簿歷史的 VS Code 擴充功能。** 它結合了 **提示詞資料庫**
-與 **剪貼簿追蹤**，讓您無需切換視窗，即可為 ChatGPT、Copilot 和 Claude 建立高品質的個人化提示詞庫。
 
 ## ✨ 核心特色
 
@@ -189,6 +191,12 @@
 在 [**VS Code Marketplace**](https://marketplace.visualstudio.com/items?itemName=winterdrive.virtual-tabs?utm_source=quickprompt&utm_medium=readme&utm_campaign=cross_promotion) | [**Open VSX Registry**](https://open-vsx.org/extension/winterdrive/virtual-tabs?utm_source=quickprompt&utm_medium=readme&utm_campaign=cross_promotion) 取得 VirtualTabs
 
 ---
+
+## ❤️ 支持專案
+
+如果您覺得這個擴充功能對您有幫助，歡迎小額贊助支持開發！
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Q5Q41SR5WO)
 
 ## 📄 授權
 
