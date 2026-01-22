@@ -42,3 +42,15 @@ docs/robots.txt
 # - docs/assets/feature_highlights.png (README 展示)
 # - docs/assets/quick_search_demo.png (README 展示)
 # - docs/assets/sidebar_view.png (README 展示)
+
+# Exclude unused assets
+docs/assets/deprecated/
+docs/assets/feature_highlights.png
+docs/assets/*1024X512.png
+docs/assets/quickprompt_icon.svg
+docs/assets/quickprompt_icon_64.png
+docs/assets/quickprompt_icon_256.png
+docs/assets/quickprompt_icon_source.svg
+docs/assets/vscode-quick-prompt-extension-banner.png
+docs/llms*.txt
+docs/ref/
