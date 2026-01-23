@@ -27,5 +27,6 @@
     "command.renameMilestone.title": "重新命名里程碑",
     "command.removeMilestone.title": "移除里程碑標籤",
     "command.deleteVersion.title": "刪除版本",
-    "command.copyVersionContent.title": "複製版本內容"
+    "command.copyVersionContent.title": "複製版本內容",
+    "config.confirmBeforeDelete.description": "刪除 Prompt 或版本前顯示確認提示"
 }

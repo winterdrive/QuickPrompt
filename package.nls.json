@@ -27,5 +27,6 @@
     "command.renameMilestone.title": "Rename Milestone",
     "command.removeMilestone.title": "Remove Milestone Tag",
     "command.deleteVersion.title": "Delete Version",
-    "command.copyVersionContent.title": "Copy Version Content"
+    "command.copyVersionContent.title": "Copy Version Content",
+    "config.confirmBeforeDelete.description": "Show confirmation dialog before deleting prompts or versions"
 }

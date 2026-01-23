@@ -2,7 +2,7 @@
     "name": "quick-prompt",
     "displayName": "%extension.displayName%",
     "description": "%extension.description%",
-    "version": "0.2.1",
+    "version": "0.2.2",
     "publisher": "winterdrive",
     "icon": "docs/assets/quickprompt_icon_128.png",
     "license": "MIT",
@@ -91,6 +91,11 @@
                     "type": "boolean",
                     "default": true,
                     "description": "Automatically generate titles for new prompts using AI"
+                },
+                "quickPrompt.confirmBeforeDelete": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "%config.confirmBeforeDelete.description%"
                 }
             }
         },

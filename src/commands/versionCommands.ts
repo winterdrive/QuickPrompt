@@ -3,6 +3,7 @@ import { VersionItem } from '../treeItems/VersionItem';
 import { VersionHistoryService } from '../services/VersionHistoryService';
 import { PromptProvider } from '../promptProvider';
 import { I18n } from '../i18n';
+import { executeWithConfirmation } from '../utils';
 
 /**
  * Show diff between a historical version and the current version
@@ -257,30 +258,28 @@ export async function handleDeleteVersion(
     versionHistoryService: VersionHistoryService,
     promptProvider: PromptProvider
 ): Promise<void> {
-    try {
-        // Confirm deletion
-        const versionLabel = item.version.milestone?.label || new Date(item.version.timestamp).toLocaleString();
-        const confirm = await vscode.window.showWarningMessage(
-            I18n.getMessage('confirm.deleteVersion', versionLabel),
-            { modal: true },
-            I18n.getMessage('action.delete')
-        );
+    const versionLabel = item.version.milestone?.label || new Date(item.version.timestamp).toLocaleString();
+    const message = I18n.getMessage('confirm.deleteVersion', versionLabel);
+    const confirmLabel = I18n.getMessage('action.delete');
 
-        if (confirm !== I18n.getMessage('action.delete')) {
-            return;
+    await executeWithConfirmation(
+        message,
+        confirmLabel,
+        async () => {
+            try {
+                // Delete the version
+                await versionHistoryService.deleteVersion(item.promptId, item.version.versionId);
+
+                // Refresh the tree view
+                await promptProvider.refresh();
+
+                vscode.window.showInformationMessage(I18n.getMessage('message.versionDeleted'));
+            } catch (error: any) {
+                console.error('Failed to delete version:', error);
+                vscode.window.showErrorMessage(I18n.getMessage('message.deleteVersionFailed', error.message));
+            }
         }
-
-        // Delete the version
-        await versionHistoryService.deleteVersion(item.promptId, item.version.versionId);
-
-        // Refresh the tree view
-        await promptProvider.refresh();
-
-        vscode.window.showInformationMessage(I18n.getMessage('message.versionDeleted'));
-    } catch (error: any) {
-        console.error('Failed to delete version:', error);
-        vscode.window.showErrorMessage(I18n.getMessage('message.deleteVersionFailed', error.message));
-    }
+    );
 }
 
 /**

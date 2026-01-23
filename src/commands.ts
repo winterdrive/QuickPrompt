@@ -4,7 +4,7 @@ import { ClipboardTreeItem } from './clipboardProvider';
 import { ClipboardManager } from './clipboardManager';
 import { PromptFileSystemProvider } from './promptFileSystem';
 import { I18n } from './i18n';
-import { getPromptQuickPickIcon, sortPrompts, generateAutoTitle, getRelativeTime } from './utils';
+import { getPromptQuickPickIcon, sortPrompts, generateAutoTitle, getRelativeTime, executeWithConfirmation } from './utils';
 import { AIEngine } from './ai/aiEngine';
 import { TitleGenerationService } from './services/titleGenerationService';
 import { VersionHistoryService } from './services/VersionHistoryService';
@@ -62,7 +62,16 @@ export function registerPromptCommands(
     // 刪除 Prompt
     context.subscriptions.push(
         vscode.commands.registerCommand('promptSniper.deletePrompt', async (item: PromptItem) => {
-            await promptProvider.deletePrompt(item);
+            const message = I18n.getMessage('confirm.deletePrompt', item.prompt.title);
+            const confirmLabel = I18n.getMessage('confirm.yes');
+
+            await executeWithConfirmation(
+                message,
+                confirmLabel,
+                async () => {
+                    await promptProvider.deletePrompt(item);
+                }
+            );
         })
     );
 

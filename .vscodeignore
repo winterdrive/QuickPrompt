@@ -39,13 +39,15 @@ docs/robots.txt
 # - docs/assets/quickprompt_icon_128.png (主 icon)
 # - docs/assets/quickprompt_icon_gray.svg (Activity Bar icon)
 # - docs/assets/hero_banner.png (README 展示)
-# - docs/assets/feature_highlights.png (README 展示)
+# - docs/assets/feature_highlights_v0003.png (README 展示)
 # - docs/assets/quick_search_demo.png (README 展示)
 # - docs/assets/sidebar_view.png (README 展示)
+# - docs/assets/version_history_demo.png (README 展示)
+# - docs/assets/diff_view_demo.png (README 展示)
 
 # Exclude unused assets
+!docs/assets/quickprompt_icon_gray.svg
 docs/assets/deprecated/
-docs/assets/feature_highlights.png
 docs/assets/*1024X512.png
 docs/assets/quickprompt_icon.svg
 docs/assets/quickprompt_icon_64.png
